@@ -1,0 +1,28 @@
+I"â<p><img width="180" src="/media/bluos-app-256.png" style="float:left;padding-right: 20px" /></p>
+
+<h1 id="bluos-remote-for-ios">BluOS Remote for iOS</h1>
+
+<p>Take control of your BluOS device</p>
+
+<ul>
+  <li>Automatically find and connect devices via local network, or connect to external IP.</li>
+  <li>Control sources, playback, and volume easily.</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>home</th>
+      <th>device</th>
+      <th>about</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img width="320" src="/media/iphone-11-pro-home.png" /></td>
+      <td><img width="320" src="/media/iphone-11-pro-device.png" /></td>
+      <td><img width="320" src="/media/iphone-11-pro-about.png" /></td>
+    </tr>
+  </tbody>
+</table>
+:ET
