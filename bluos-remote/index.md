@@ -16,4 +16,4 @@ title: "BluOS Remote"
 
 |home|device|about|
 |-|-|-|
-|<img width="320" src="/media/iphone-11-pro-home.png">|<img width="320" src="/media/iphone-11-pro-device.png">|<img width="320" src="/media/iphone-11-pro-about.png">|
+|<img width="320" src="/media/iphone-11-pro-max-home.png">|<img width="320" src="/media/iphone-11-pro-max-device.png">|<img width="320" src="/media/iphone-11-pro-max-about.png">|
