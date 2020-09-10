@@ -5,6 +5,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style type="text/css">
+	html {
+	  position: relative;
+	  min-height: 100%;
+	}
+	body {
+	  margin-bottom: 60px; /* Margin bottom by footer height */
+	}
+	.footer {
+	  position: absolute;
+	  bottom: 0;
+	  width: 100%;
+	  height: 80px; /* Set the fixed height of the footer here */
+	  line-height: 40px; /* Vertically center the text there */
+	  background-color: #f5f5f5;
+	}
+  </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -17,19 +34,19 @@
 		gxlabs is an app development company based in Brooklyn, NY
 	</p>
 </div>
-<div class="container justify-content-md-center">
+<div class="container justify-content-md-center py-4">
 	{{ content }}
 </div>
-<footer class="jumbotron mb-0 page-footer font-small fixed-bottom">
-	<div class="container justify-content-md-center">
-	  
-	  <div class="col footer text-right">Contact:
-	    <a href="mailto:enquiries@gxlabs.co">enquiries@gxlabs.co</a>
-	  </div>
-	  <div class="col footer-copyright text-right pb-1">© 2020 Copyright:
-	    <a href="https://www.gxlabs.co">gxlabs LLC</a>
-	  </div>
-	</div>
-</footer>
+<div class="container-fluid footer my-0">
+    <div class="spacer"></div>
+    <div class="container d-flex justify-content-between">
+        <h5 class="my-auto">Copyright © 2020 gxlabs</h5>
+        <ul class="nav flex-column flex-sm-row">
+            <li class="nav-item">
+            	<a class="nav-link" href="mailto:enquiries@gxlabs.co">Contact</a>
+            </li>
+        </ul>
+    </div>
+</div>
 </body>
 </html>
