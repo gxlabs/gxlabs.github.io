@@ -1,16 +1,35 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-   <title>{{ page.title }}</title>
-   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+  <title>gxlabs</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div id="wrapper">
-        <div id="header">
-            <h1><a href="/">Home page</a></h1>
-        </div>
-        {{ content }}
-    </div>
+
+<div class="jumbotron text-center">
+	<h1>gxlabs</h1>
+	<p>
+		gxlabs is an app development company based in Brooklyn, NY
+	</p>
+</div>
+<div class="container justify-content-md-center">
+	{{ content }}
+</div>
+<footer class="jumbotron mb-0 page-footer font-small fixed-bottom">
+	<div class="container justify-content-md-center">
+	  
+	  <div class="col footer text-right">Contact:
+	    <a href="mailto:enquiries@gxlabs.co">enquiries@gxlabs.co</a>
+	  </div>
+	  <div class="col footer-copyright text-right pb-1">© 2020 Copyright:
+	    <a href="https://www.gxlabs.co">gxlabs LLC</a>
+	  </div>
+	</div>
+</footer>
 </body>
 </html>
