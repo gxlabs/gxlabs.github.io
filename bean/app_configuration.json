@@ -1,9 +1,0 @@
-{
-	"servers": [
-		{
-			"name": "production",
-			"domain": "https://firestore.googleapis.com",
-			"api_path": "/v1/projects/bean-a29bc/databases/(default)/documents"
-		}
-	]
-}
