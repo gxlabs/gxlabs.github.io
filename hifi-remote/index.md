@@ -27,8 +27,8 @@ title: "HiFi Remote"
         <p>Home</p>
     </div>
     <div class="col">
-        <img src="/media/iphone-11-pro-max-device.png" width="320" alt="HiFi remote app devices screen">
-        <p>Devices</p>
+        <img src="/media/iphone-11-pro-max-settings.png" width="320" alt="HiFi remote app settings screen">
+        <p>Settings</p>
     </div>
     <div class="col">
         <img src="/media/iphone-11-pro-max-about.png" width="320" alt="HiFi remote app about screen">
