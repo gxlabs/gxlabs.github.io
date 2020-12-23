@@ -9,6 +9,7 @@ title: "iFit Strava Sync"
         <h3 class="mt-0"><a href="/ifit-strava">iFit Strava Sync</a></h3>
         <p>Sync workouts from your iFit account to Strava!</p>
         <p>Available by invite only: email ifit-strava@gxlabs.co to request an invite.</p>
+        <p>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
     </div>
 </div>
 <div class="row mt-4">
