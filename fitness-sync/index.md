@@ -10,7 +10,7 @@ title: "Fitness Sync"
         <p>Sync workouts from your iFit account to Strava!</p>
         <p>Available by invite only: email ifit-strava@gxlabs.co to request an invite.</p>
         <p>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
-        <p>This app works with iFit and Strava accounts, but it is not created, maintained, or endorsed by iFit or Strava.</p>
+        <p>While this app works with iFit and Strava accounts, it is not created, maintained, or endorsed by iFit or Strava.</p>
     </div>
 </div>
 <div class="row mt-4">
@@ -18,11 +18,15 @@ title: "Fitness Sync"
 </div>
 <div class="row">
     <div class="col">
-        <img src="/media/fitness-sync-login.png" width="320" alt="Fitness sync login screen">
+        <img src="/media/fitness-sync-1.png" width="320" alt="Fitness sync login screen">
         <p>Log in</p>
     </div>
     <div class="col">
-        <img src="/media/fitness-sync.png" width="320" alt="Fitness sync app screen">
+        <img src="/media/fitness-sync-2.png" width="320" alt="Fitness sync app screen">
         <p>Logged in</p>
+    </div>
+    <div class="col">
+        <img src="/media/fitness-sync-3.png" width="320" alt="Fitness sync app screen">
+        <p>Post to Strava</p>
     </div>
 </div>
