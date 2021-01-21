@@ -8,7 +8,8 @@ title: "Fitness Sync"
     <div class="media-body">
         <h3 class="mt-0"><a href="/fitness-sync">Fitness Sync</a></h3>
         <p>Sync workouts from your iFit account to Strava!</p>
-        <p>Available by invite only: email ifit-strava@gxlabs.co to request an invite.</p>
+        <p>Available by invite only: 
+        <p>Download today on the <a href="https://apps.apple.com/us/app/fitness-sync/id1549708350">iOS App Store</a>.</p>
         <p>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
         <p>While this app works with iFit and Strava accounts, it is not created, maintained, or endorsed by iFit or Strava.</p>
     </div>
