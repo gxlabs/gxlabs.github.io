@@ -15,7 +15,7 @@ title: "HiFi Remote"
             </ul>
         </p>
         <p>This app works with BluOS equipment, but it is not created, maintained, or endorsed by Lenbrook Industries.</p>
-        <p>Download for free on the <a href="https://apps.apple.com/us/app/id1518676754">iOS App Store</a>.</p>
+        <p>Download on the <a href="https://apps.apple.com/us/app/id1518676754">iOS App Store</a>.</p>
     </div>
 </div>
 <div class="row mt-4">
