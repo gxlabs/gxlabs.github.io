@@ -109,6 +109,7 @@
       }
       body {
         height: 100%;
+        display: block;
         background-color: var(--color-background);
         margin: 0;
         padding: 0;
@@ -121,11 +122,12 @@
        display:none;
        left:0px;
        top:0px;
-       width:100%;
-       height:100%;
+       margin: 0;
+       width:100vw;
+       height:100vh;
        z-index:-1;
-       background: url("https://cdn141.picsart.com/327631317031211.png");
-       background-size: cover;
+       background: url("https://cdn141.picsart.com/327631317031211.png") center;
+       background-overflow:visible;
        animation: spin 14s linear infinite;
       }
       @keyframes spin {
