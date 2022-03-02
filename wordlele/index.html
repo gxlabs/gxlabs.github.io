@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
     <title>Wordle - A daily word game</title>
@@ -115,9 +115,27 @@
         /* Prevent scrollbar appearing on page transition */
         overflow-y: hidden;
       }
+
+      #wed {
+       position:absolute;
+       display:none;
+       left:0px;
+       top:0px;
+       width:100%;
+       height:100%;
+       z-index:-1;
+       background: url("https://cdn141.picsart.com/327631317031211.png");
+       background-size: cover;
+       animation: spin 14s linear infinite;
+      }
+      @keyframes spin {
+       0% { transform: rotate(0deg); }
+       100% { transform: rotate(360deg); }
+      }
     </style>
   </head>
   <body class="nightmode">
+    <div id="wed"></div>
     <script async="" src="./index_files/js"></script>
     <script>
       (function () {
@@ -128,6 +146,4 @@
     </script>
     <script src="./index_files/main.e65ce0a5.js"></script>
     <game-app></game-app>
-  
-
 </body></html>
