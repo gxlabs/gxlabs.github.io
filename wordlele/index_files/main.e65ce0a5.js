@@ -19,12 +19,15 @@ function parseParams(querystring) {
 };
 var queryParams = parseParams(window.location.search);
 
-
-https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+// https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 // IANA Timezone names
 function convertTZ(date, tzString) {
     return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
 }
+
+// game number overridden by:
+// 1: timezone override with timezone=Pacific/Auckland etc, or
+// 2: game=123 for whatever game number
 
 var dateToUse = new Date
 if (queryParams.timezone) {
@@ -32,6 +35,8 @@ if (queryParams.timezone) {
 }
 
 // configure number of attempts
+// 1: dadmode=anything is 10 attempts
+// 2: attempts=n is n attempts
 var totalAttempts = 6;
 if (queryParams.dadmode) {
 	totalAttempts = 10
@@ -1043,7 +1048,11 @@ function Da(e) {
 }
 
 function Ga(e) {
-    return Na(Ha, e)
+    if (queryParams.game !== undefined) {
+        return queryParams.game
+    } else {
+        return Na(Ha, e)    
+    }
 }
 var Ba = "abcdefghijklmnopqrstuvwxyz",
     Fa = [].concat(g(Ba.split("").slice(13)), g(Ba.split("").slice(0, 13)));
@@ -1257,7 +1266,7 @@ var Za = "IN_PROGRESS",
                     return e.showHelpModal()
                 }), 100);
 
-                if (queryParams.timezone) {
+                if (queryParams.timezone || queryParams.game) {
                     // debug timezone in wordle header label
                     this.shadowRoot.getElementById('gameNumber').innerText = this.dayOffset
                 }
