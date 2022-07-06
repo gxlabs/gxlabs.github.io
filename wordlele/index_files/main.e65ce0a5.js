@@ -1745,7 +1745,7 @@ var Ms = {
                                         switch (e) {
                                             case Ma:
                                                 a = function(e) {
-                                                    return e ? "🟧" : (wed ? "🐸" : "🟩")
+                                                    return e ? "🟧" : "🟩"
                                                 }(i);
                                                 break;
                                             case Ia:
