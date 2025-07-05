@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Seat Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .upload-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .file-input-wrapper:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .csv-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .guest-list {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            height: fit-content;
+        }
+
+        .guest-list h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .guest-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .guest-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-color: #667eea;
+        }
+
+        .guest-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .guest-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .guest-party {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .guest-detail {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .seating-area {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 600px;
+        }
+
+        .seating-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .tables-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .table {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 200px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 3px dashed transparent;
+        }
+
+        .table.drag-over {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            transform: scale(1.02);
+        }
+
+        .table-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .table-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .table-capacity {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .table-guests {
+            min-height: 120px;
+        }
+
+        .table-guest {
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+
+        .table-guest:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .table-guest.dragging {
+            opacity: 0.5;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .tables-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ Wedding Seat Planner ✨</h1>
+            <p>Upload your RSVP CSV and create the perfect seating arrangement</p>
+        </div>
+
+        <div class="upload-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="csvFile" accept=".csv">
+                <span>📂 Choose CSV File</span>
+            </div>
+            <button class="btn btn-secondary" onclick="loadSampleData()">🎭 Load Sample Data</button>
+            
+            <div class="csv-info">
+                <h4>CSV Format for Your Wedding RSVPs:</h4>
+                <p>Upload your export.csv file directly! The tool will automatically:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>✅ Combine Title, First Name, Last Name into display names</li>
+                    <li>✅ Only include guests attending the wedding</li>
+                    <li>✅ Group by Welcome Party affiliation</li>
+                    <li>✅ Show meal choices and dietary restrictions</li>
+                    <li>✅ Handle shuttle and hotel information</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="stats" class="stats" style="display: none;">
+            <div class="stat-item">
+                <div class="stat-number" id="totalGuests">0</div>
+                <div class="stat-label">Total Guests</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="seatedGuests">0</div>
+                <div class="stat-label">Seated</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalTables">0</div>
+                <div class="stat-label">Tables</div>
+            </div>
+        </div>
+
+        <div class="main-content" id="mainContent" style="display: none;">
+            <div class="guest-list">
+                <h3>👥 Guest List</h3>
+                <div id="guestList" class="empty-state">
+                    <h3>No guests loaded</h3>
+                    <p>Upload a CSV file to get started</p>
+                </div>
+            </div>
+
+            <div class="seating-area">
+                <div class="seating-controls">
+                    <button class="btn" onclick="addTable()">➕ Add Table</button>
+                    <button class="btn btn-secondary" onclick="autoArrange()">🎯 Auto Arrange</button>
+                    <button class="btn" onclick="exportPlan()">💾 Export Plan</button>
+                    <button class="btn" onclick="clearAll()">🗑️ Clear All</button>
+                </div>
+                <div id="tablesContainer" class="tables-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let guests = [];
+        let tables = [];
+        let tableCounter = 1;
+
+        // File upload handler
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    parseCSV(e.target.result);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            
+            guests = [];
+            for (let i = 1; i < lines.length; i++) {
+                // Handle CSV parsing with potential commas in quoted fields
+                const values = parseCSVLine(lines[i]);
+                const guest = {};
+                
+                headers.forEach((header, index) => {
+                    guest[header] = values[index] || '';
+                });
+                
+                // Create display name from your CSV structure
+                const title = guest['Title'] || '';
+                const firstName = guest['First Name'] || '';
+                const lastName = guest['Last Name'] || '';
+                const suffix = guest['Suffix'] || '';
+                
+                guest.displayName = [title, firstName, lastName, suffix].filter(Boolean).join(' ');
+                
+                // Check if attending wedding (skip if not attending)
+                const weddingAttendance = guest['Wedding'] || '';
+                if (weddingAttendance.toLowerCase().includes('no') || weddingAttendance.toLowerCase().includes('decline')) {
+                    continue; // Skip guests not attending wedding
+                }
+                
+                // Determine party affiliation
+                const welcomeParty = guest['Welcome Party'] || '';
+                guest.party = welcomeParty || 'General';
+                
+                // Add additional info
+                guest.mealChoice = guest['Meal Choice'] || '';
+                guest.dietary = guest['Are there any dietary restrictions that we should know of? If no, leave blank.'] || '';
+                guest.shuttle = guest['Will you be taking the shuttle bus from Hotel Indigo (3pm) to the venue and back (11 pm)? If no, leave blank'] || '';
+                guest.hotel = guest['Would you like to join the hotel block (Hotel Indigo Financial District, $199 per night)? Do you require accommodation the night before, night of, or night after? If no, leave blank.'] || '';
+                
+                guest.id = i;
+                guest.tableId = null;
+                
+                guests.push(guest);
+            }
+            
+            displayGuests();
+            updateStats();
+            document.getElementById('mainContent').style.display = 'grid';
+            document.getElementById('stats').style.display = 'flex';
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current.trim());
+            return result;
+        }
+
+        function loadSampleData() {
+            guests = [
+                { id: 1, displayName: 'John & Sarah Smith', party: "Bride's Family", tableId: null },
+                { id: 2, displayName: 'Mike Johnson', party: "Groom's Friends", tableId: null },
+                { id: 3, displayName: 'Emily & David Brown', party: "Bride's Friends", tableId: null },
+                { id: 4, displayName: 'Lisa Wilson', party: "Bride's Family", tableId: null },
+                { id: 5, displayName: 'Tom & Kate Davis', party: "Groom's Family", tableId: null },
+                { id: 6, displayName: 'Alex Martinez', party: "Work Colleagues", tableId: null },
+                { id: 7, displayName: 'Jennifer & Paul Lee', party: "Bride's Friends", tableId: null },
+                { id: 8, displayName: 'Robert Taylor', party: "Groom's Family", tableId: null },
+                { id: 9, displayName: 'Amanda & Chris White', party: "College Friends", tableId: null },
+                { id: 10, displayName: 'Jessica Garcia', party: "Work Colleagues", tableId: null }
+            ];
+            
+            displayGuests();
+            updateStats();
+            document.getElementById('mainContent').style.display = 'grid';
+            document.getElementById('stats').style.display = 'flex';
+        }
+
+        function displayGuests() {
+            const guestList = document.getElementById('guestList');
+            guestList.innerHTML = '';
+            
+            const unseatedGuests = guests.filter(guest => !guest.tableId);
+            
+            if (unseatedGuests.length === 0) {
+                guestList.innerHTML = '<div class="empty-state"><h3>All guests are seated! 🎉</h3></div>';
+                return;
+            }
+            
+            unseatedGuests.forEach(guest => {
+                const guestElement = document.createElement('div');
+                guestElement.className = 'guest-item';
+                guestElement.draggable = true;
+                guestElement.dataset.guestId = guest.id;
+                
+                // Create detailed guest info
+                let guestInfo = `<div class="guest-name">${guest.displayName}</div>`;
+                guestInfo += `<div class="guest-party">${guest.party}</div>`;
+                
+                if (guest.mealChoice) {
+                    guestInfo += `<div class="guest-detail">🍽️ ${guest.mealChoice}</div>`;
+                }
+                if (guest.dietary) {
+                    guestInfo += `<div class="guest-detail">⚠️ ${guest.dietary}</div>`;
+                }
+                
+                guestElement.innerHTML = guestInfo;
+                
+                guestElement.addEventListener('dragstart', handleDragStart);
+                guestElement.addEventListener('dragend', handleDragEnd);
+                
+                guestList.appendChild(guestElement);
+            });
+        }
+
+        function addTable() {
+            const table = {
+                id: tableCounter++,
+                name: `Table ${tableCounter - 1}`,
+                capacity: 8,
+                guests: []
+            };
+            
+            tables.push(table);
+            displayTables();
+            updateStats();
+        }
+
+        function displayTables() {
+            const container = document.getElementById('tablesContainer');
+            container.innerHTML = '';
+            
+            tables.forEach(table => {
+                const tableElement = document.createElement('div');
+                tableElement.className = 'table';
+                tableElement.dataset.tableId = table.id;
+                tableElement.innerHTML = `
+                    <div class="table-header">
+                        <div class="table-name">${table.name}</div>
+                        <div class="table-capacity">${table.guests.length}/${table.capacity} seats</div>
+                    </div>
+                    <div class="table-guests" id="table-${table.id}">
+                        ${table.guests.map(guest => {
+                            let guestHtml = `<div class="table-guest" draggable="true" data-guest-id="${guest.id}">`;
+                            guestHtml += `<div class="guest-name">${guest.displayName}</div>`;
+                            guestHtml += `<div class="guest-party">${guest.party}</div>`;
+                            if (guest.mealChoice) guestHtml += `<div class="guest-detail">🍽️ ${guest.mealChoice}</div>`;
+                            if (guest.dietary) guestHtml += `<div class="guest-detail">⚠️ ${guest.dietary}</div>`;
+                            guestHtml += `</div>`;
+                            return guestHtml;
+                        }).join('')}
+                    </div>
+                `;
+                
+                // Add drag and drop event listeners
+                tableElement.addEventListener('dragover', handleDragOver);
+                tableElement.addEventListener('drop', handleDrop);
+                tableElement.addEventListener('dragleave', handleDragLeave);
+                
+                // Add drag listeners to guests in table
+                tableElement.querySelectorAll('.table-guest').forEach(guestEl => {
+                    guestEl.addEventListener('dragstart', handleDragStart);
+                    guestEl.addEventListener('dragend', handleDragEnd);
+                });
+                
+                container.appendChild(tableElement);
+            });
+        }
+
+        function handleDragStart(e) {
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', e.target.dataset.guestId);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            const guestId = parseInt(e.dataTransfer.getData('text/plain'));
+            const tableId = parseInt(e.currentTarget.dataset.tableId);
+            
+            moveGuestToTable(guestId, tableId);
+        }
+
+        function moveGuestToTable(guestId, tableId) {
+            const guest = guests.find(g => g.id === guestId);
+            const table = tables.find(t => t.id === tableId);
+            
+            if (!guest || !table) return;
+            
+            // Check capacity
+            if (table.guests.length >= table.capacity) {
+                alert('Table is full!');
+                return;
+            }
+            
+            // Remove from current table if any
+            if (guest.tableId) {
+                const currentTable = tables.find(t => t.id === guest.tableId);
+                if (currentTable) {
+                    currentTable.guests = currentTable.guests.filter(g => g.id !== guestId);
+                }
+            }
+            
+            // Add to new table
+            guest.tableId = tableId;
+            table.guests.push(guest);
+            
+            displayGuests();
+            displayTables();
+            updateStats();
+        }
+
+        function autoArrange() {
+            // Simple auto-arrangement by party
+            const parties = {};
+            guests.forEach(guest => {
+                if (!parties[guest.party]) {
+                    parties[guest.party] = [];
+                }
+                parties[guest.party].push(guest);
+            });
+            
+            // Clear current arrangements
+            tables.forEach(table => table.guests = []);
+            guests.forEach(guest => guest.tableId = null);
+            
+            // Ensure we have enough tables
+            const minTables = Math.ceil(guests.length / 8);
+            while (tables.length < minTables) {
+                addTable();
+            }
+            
+            let currentTableIndex = 0;
+            Object.values(parties).forEach(partyGuests => {
+                partyGuests.forEach(guest => {
+                    const table = tables[currentTableIndex];
+                    if (table.guests.length >= table.capacity) {
+                        currentTableIndex = (currentTableIndex + 1) % tables.length;
+                    }
+                    moveGuestToTable(guest.id, tables[currentTableIndex].id);
+                });
+            });
+        }
+
+        function updateStats() {
+            const totalGuests = guests.length;
+            const seatedGuests = guests.filter(g => g.tableId).length;
+            const totalTables = tables.length;
+            
+            document.getElementById('totalGuests').textContent = totalGuests;
+            document.getElementById('seatedGuests').textContent = seatedGuests;
+            document.getElementById('totalTables').textContent = totalTables;
+        }
+
+        function exportPlan() {
+            const plan = {
+                tables: tables.map(table => ({
+                    name: table.name,
+                    capacity: table.capacity,
+                    guests: table.guests.map(guest => ({
+                        name: guest.displayName,
+                        party: guest.party
+                    }))
+                })),
+                unseatedGuests: guests.filter(g => !g.tableId).map(guest => ({
+                    name: guest.displayName,
+                    party: guest.party
+                }))
+            };
+            
+            const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'wedding_seating_plan.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all tables and arrangements?')) {
+                tables = [];
+                guests.forEach(guest => guest.tableId = null);
+                displayGuests();
+                displayTables();
+                updateStats();
+            }
+        }
+
+        // Initialize with sample data for demo
+        window.addEventListener('load', () => {
+            // Start with empty state
+        });
+    </script>
+</body>
+</html>
