@@ -350,62 +350,110 @@
         document.getElementById('csvFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
+                console.log('File selected:', file.name);
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    parseCSV(e.target.result);
+                    console.log('File read successfully');
+                    try {
+                        parseCSV(e.target.result);
+                    } catch (error) {
+                        console.error('Error parsing CSV:', error);
+                        alert('Error parsing CSV file. Please check the format and try again.');
+                    }
+                };
+                reader.onerror = function() {
+                    console.error('Error reading file');
+                    alert('Error reading file. Please try again.');
                 };
                 reader.readAsText(file);
             }
         });
 
         function parseCSV(csvText) {
+            console.log('Parsing CSV, first 200 characters:', csvText.substring(0, 200));
+            
             const lines = csvText.trim().split('\n');
-            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            console.log('Number of lines:', lines.length);
+            
+            if (lines.length < 2) {
+                alert('CSV file appears to be empty or has no data rows.');
+                return;
+            }
+            
+            const headers = parseCSVLine(lines[0]);
+            console.log('Headers found:', headers);
             
             guests = [];
+            let processedCount = 0;
+            
             for (let i = 1; i < lines.length; i++) {
-                // Handle CSV parsing with potential commas in quoted fields
-                const values = parseCSVLine(lines[i]);
-                const guest = {};
+                if (lines[i].trim() === '') continue; // Skip empty lines
                 
-                headers.forEach((header, index) => {
-                    guest[header] = values[index] || '';
-                });
-                
-                // Create display name from your CSV structure
-                const title = guest['Title'] || '';
-                const firstName = guest['First Name'] || '';
-                const lastName = guest['Last Name'] || '';
-                const suffix = guest['Suffix'] || '';
-                
-                guest.displayName = [title, firstName, lastName, suffix].filter(Boolean).join(' ');
-                
-                // Check if attending wedding (skip if not attending)
-                const weddingAttendance = guest['Wedding'] || '';
-                if (weddingAttendance.toLowerCase().includes('no') || weddingAttendance.toLowerCase().includes('decline')) {
-                    continue; // Skip guests not attending wedding
+                try {
+                    const values = parseCSVLine(lines[i]);
+                    const guest = {};
+                    
+                    headers.forEach((header, index) => {
+                        guest[header] = values[index] || '';
+                    });
+                    
+                    // Create display name from your CSV structure
+                    const title = guest['Title'] || '';
+                    const firstName = guest['First Name'] || '';
+                    const lastName = guest['Last Name'] || '';
+                    const suffix = guest['Suffix'] || '';
+                    
+                    guest.displayName = [title, firstName, lastName, suffix].filter(Boolean).join(' ');
+                    
+                    // If no name could be constructed, skip this row
+                    if (!guest.displayName.trim()) {
+                        console.log('Skipping row with no name:', values);
+                        continue;
+                    }
+                    
+                    // Check if attending wedding (skip if not attending)
+                    const weddingAttendance = guest['Wedding'] || '';
+                    if (weddingAttendance.toLowerCase().includes('no') || 
+                        weddingAttendance.toLowerCase().includes('decline') ||
+                        weddingAttendance.toLowerCase().includes('not attending')) {
+                        console.log('Skipping non-attending guest:', guest.displayName);
+                        continue;
+                    }
+                    
+                    // Determine party affiliation
+                    const welcomeParty = guest['Welcome Party'] || '';
+                    guest.party = welcomeParty || 'General';
+                    
+                    // Add additional info
+                    guest.mealChoice = guest['Meal Choice'] || '';
+                    guest.dietary = guest['Are there any dietary restrictions that we should know of? If no, leave blank.'] || '';
+                    guest.shuttle = guest['Will you be taking the shuttle bus from Hotel Indigo (3pm) to the venue and back (11 pm)? If no, leave blank'] || '';
+                    guest.hotel = guest['Would you like to join the hotel block (Hotel Indigo Financial District, $199 per night)? Do you require accommodation the night before, night of, or night after? If no, leave blank.'] || '';
+                    
+                    guest.id = Date.now() + i; // Use timestamp + index for unique ID
+                    guest.tableId = null;
+                    
+                    guests.push(guest);
+                    processedCount++;
+                } catch (error) {
+                    console.error('Error processing row', i, ':', error, lines[i]);
                 }
-                
-                // Determine party affiliation
-                const welcomeParty = guest['Welcome Party'] || '';
-                guest.party = welcomeParty || 'General';
-                
-                // Add additional info
-                guest.mealChoice = guest['Meal Choice'] || '';
-                guest.dietary = guest['Are there any dietary restrictions that we should know of? If no, leave blank.'] || '';
-                guest.shuttle = guest['Will you be taking the shuttle bus from Hotel Indigo (3pm) to the venue and back (11 pm)? If no, leave blank'] || '';
-                guest.hotel = guest['Would you like to join the hotel block (Hotel Indigo Financial District, $199 per night)? Do you require accommodation the night before, night of, or night after? If no, leave blank.'] || '';
-                
-                guest.id = i;
-                guest.tableId = null;
-                
-                guests.push(guest);
+            }
+            
+            console.log('Processed guests:', processedCount);
+            console.log('Sample guest:', guests[0]);
+            
+            if (guests.length === 0) {
+                alert('No valid guest data found in the CSV. Please check that guests are marked as attending the wedding.');
+                return;
             }
             
             displayGuests();
             updateStats();
             document.getElementById('mainContent').style.display = 'grid';
             document.getElementById('stats').style.display = 'flex';
+            
+            alert(`Successfully loaded ${guests.length} wedding guests!`);
         }
 
         function parseCSVLine(line) {
@@ -419,14 +467,14 @@
                 if (char === '"') {
                     inQuotes = !inQuotes;
                 } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
+                    result.push(current.trim().replace(/^"|"$/g, '')); // Remove surrounding quotes
                     current = '';
                 } else {
                     current += char;
                 }
             }
             
-            result.push(current.trim());
+            result.push(current.trim().replace(/^"|"$/g, '')); // Remove surrounding quotes
             return result;
         }
 
