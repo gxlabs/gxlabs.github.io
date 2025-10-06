@@ -23,14 +23,14 @@ title: "Stretchi"
 <div class="row">
     <div class="col">
         <img src="/media/stretchi-active-routine.png" width="320" alt="Stretch active routine">
-        <p>Home</p>
+        <p>Active routine</p>
     </div>
     <div class="col">
         <img src="/media/stretchi-edit-routine.png" width="320" alt="Stretchi edit routine">
-        <p>Settings</p>
+        <p>Edit routine</p>
     </div>
     <div class="col">
         <img src="/media/stretchi-history.png" width="320" alt="Stretchi routine history">
-        <p>About</p>
+        <p>View history</p>
     </div>
 </div>
