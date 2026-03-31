@@ -598,7 +598,7 @@ enchanted</textarea>
         <input type="text" id="message-input" placeholder="Congratulations!">
       </div>
 
-      <button class="btn-generate" id="generate-btn">Generate Puzzle Link</button>
+      <button class="btn-generate" id="generate-btn">Generate Puzzle</button>
 
       <div class="generated-link" id="generated-link">
         <p>Share this link:</p>
@@ -955,12 +955,11 @@ enchanted</textarea>
       const victoryMessage = document.getElementById('message-input').value || 'Congratulations!';
       const encodedMessage = btoa(unescape(encodeURIComponent(victoryMessage)));
 
-      // Generate the link
+      // Generate the link and redirect to it
       const encoded = encodeWords(words);
       const url = `${window.location.origin}${window.location.pathname}?q=${encoded}&color=${accentColor}&bg=${bgColor}&msg=${encodedMessage}`;
 
-      document.getElementById('puzzle-link').value = url;
-      document.getElementById('generated-link').classList.add('show');
+      window.location.href = url;
     }
 
     function copyLink() {
