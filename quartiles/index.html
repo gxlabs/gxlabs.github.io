@@ -1106,7 +1106,18 @@ enchanted"></textarea>
       const totalTiles = 20;
       const completedCount = completedQuartiles.length;
 
-      // Active tiles go at the top
+      // Completed quartiles go at the top
+      completedQuartiles.forEach((quartile) => {
+        quartile.tiles.forEach(tileIdx => {
+          const tile = allTiles[tileIdx];
+          const btn = document.createElement('button');
+          btn.className = 'tile completed';
+          btn.textContent = tile.text;
+          grid.appendChild(btn);
+        });
+      });
+
+      // Active tiles go after completed quartiles
       activeTileIndices.forEach((tileIdx, displayIdx) => {
         const tile = allTiles[tileIdx];
         const btn = document.createElement('button');
@@ -1123,7 +1134,7 @@ enchanted"></textarea>
         grid.appendChild(btn);
       });
 
-      // Add placeholder tiles for the gap
+      // Add placeholder tiles at the bottom
       const activeTileCount = activeTileIndices.length;
       const completedTileCount = completedCount * 4;
       const placeholderCount = totalTiles - activeTileCount - completedTileCount;
@@ -1133,17 +1144,6 @@ enchanted"></textarea>
         placeholder.className = 'tile placeholder';
         grid.appendChild(placeholder);
       }
-
-      // Completed quartiles go at the bottom (most recent at bottom)
-      completedQuartiles.forEach((quartile) => {
-        quartile.tiles.forEach(tileIdx => {
-          const tile = allTiles[tileIdx];
-          const btn = document.createElement('button');
-          btn.className = 'tile completed';
-          btn.textContent = tile.text;
-          grid.appendChild(btn);
-        });
-      });
 
       updateCurrentWord();
     }
@@ -1259,8 +1259,8 @@ enchanted"></textarea>
       // Sort by the order they were selected to maintain word order
       selectedButtons.sort((a, b) => displayIndices.indexOf(a.di) - displayIndices.indexOf(b.di));
 
-      // Calculate destination row (bottom, moving up as more quartiles complete)
-      const destRow = 4 - completedQuartiles.length;
+      // Calculate destination row (top, moving down as more quartiles complete)
+      const destRow = completedQuartiles.length;
 
       // Get current positions and set up animation
       selectedButtons.forEach((item, idx) => {
