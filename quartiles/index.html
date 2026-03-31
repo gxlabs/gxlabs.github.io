@@ -577,11 +577,11 @@
 
       <div class="error-box" id="error-box"></div>
 
-      <textarea id="words-input" placeholder="adventure
+      <textarea id="words-input">adventure
 beautiful
 celebrate
 wonderful
-enchanted"></textarea>
+enchanted</textarea>
 
       <div class="color-picker-row">
         <label for="color-input">Accent Color</label>
@@ -1094,10 +1094,6 @@ enchanted"></textarea>
       document.getElementById('submit-btn').addEventListener('click', submitWord);
       document.getElementById('shuffle-btn').addEventListener('click', shuffleTiles);
 
-      // Check if game was already won
-      if (completedQuartiles.length === 5) {
-        setTimeout(showVictory, 300);
-      }
     }
 
     function getGridPositions() {
@@ -1355,16 +1351,16 @@ enchanted"></textarea>
         selectedIndices = [];
         isAnimating = false;
 
-        // Check for victory
+        // Check for completion
         if (completedQuartiles.length === 5) {
           score += 40;
           document.getElementById('score').textContent = score;
-          saveProgress(); // Save final state
-          setTimeout(showVictory, 300);
-        } else {
-          // Save progress after each word
-          saveProgress();
+          updateRankBar();
+          showMessage(`${victoryMessage} +40 bonus!`, 'success');
         }
+
+        // Save progress after each word
+        saveProgress();
 
         // Re-render
         renderGrid();
