@@ -1356,6 +1356,7 @@ enchanted</textarea>
           document.getElementById('score').textContent = score;
           updateRankBar();
           showMessage(`${victoryMessage} +40 bonus!`, 'success');
+          setTimeout(showVictory, 1000);
         }
 
         // Save progress after each word
