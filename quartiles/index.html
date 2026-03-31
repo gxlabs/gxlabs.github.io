@@ -354,7 +354,7 @@
       border: none;
       border-radius: 10px;
       color: white;
-      font-size: 1.1em;
+      font-size: 1.25em;
       font-weight: 500;
       cursor: pointer;
       text-transform: lowercase;
@@ -399,7 +399,7 @@
       align-items: center;
       gap: 50px;
       padding: 0 20px;
-      margin-top: auto;
+      margin-top: 20px;
       padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     }
 
@@ -560,7 +560,7 @@
 
     @media (max-width: 400px) {
       .tile {
-        font-size: 0.95em;
+        font-size: 1.1em;
       }
       .score-display {
         font-size: 2em;
@@ -844,6 +844,7 @@ enchanted"></textarea>
     let score = 0;
     let isAnimating = false;
     let victoryMessage = 'Congratulations!';
+    let hasStarted = false;
 
     // ============================================
     // SETUP SCREEN
@@ -944,6 +945,7 @@ enchanted"></textarea>
       foundWords = new Set();
       score = 0;
       isAnimating = false;
+      hasStarted = false;
 
       // Split each word and collect tiles
       const existingTiles = new Set();
@@ -974,6 +976,9 @@ enchanted"></textarea>
       updateQuartileDots();
       updateRankBar();
       renderGrid();
+
+      const instruction = document.getElementById('instruction');
+      if (instruction) instruction.style.visibility = 'visible';
 
       // Set up event listeners (remove old ones first by cloning)
       const clearBtn = document.getElementById('clear-btn');
@@ -1064,6 +1069,12 @@ enchanted"></textarea>
     function selectTile(displayIndex) {
       if (isAnimating) return;
 
+      if (!hasStarted) {
+        hasStarted = true;
+        const instruction = document.getElementById('instruction');
+        if (instruction) instruction.style.visibility = 'hidden';
+      }
+
       const pos = selectedIndices.indexOf(displayIndex);
       if (pos > -1) {
         selectedIndices.splice(pos, 1);
@@ -1094,7 +1105,6 @@ enchanted"></textarea>
         currentWord.textContent = 'Words you find appear here';
         currentWord.classList.remove('has-word');
         submitBtn.disabled = true;
-        if (instruction) instruction.textContent = 'Select a tile to get started';
       } else {
         const word = selectedIndices
           .map(di => allTiles[activeTileIndices[di]].text)
@@ -1102,7 +1112,6 @@ enchanted"></textarea>
         currentWord.textContent = word;
         currentWord.classList.add('has-word');
         submitBtn.disabled = false;
-        if (instruction) instruction.textContent = '';
       }
     }
 
