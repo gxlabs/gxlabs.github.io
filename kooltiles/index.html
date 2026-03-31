@@ -1954,6 +1954,89 @@ enchanted</textarea>
       return null;
     }
 
+    // Split a word into numTiles parts (1-3), each 2-4 chars, no duplicates
+    function splitBonusWord(word, existingTiles, numTiles) {
+      const upper = word.toUpperCase().replace(/[^A-Z]/g, '');
+      const len = upper.length;
+
+      if (numTiles === 1) {
+        if (len >= 2 && len <= 4 && !existingTiles.has(upper)) {
+          return [upper];
+        }
+        return null;
+      }
+
+      if (numTiles === 2) {
+        for (let i = 2; i <= Math.min(4, len - 2); i++) {
+          const p1 = upper.slice(0, i);
+          const p2 = upper.slice(i);
+          if (p2.length >= 2 && p2.length <= 4 &&
+              !existingTiles.has(p1) && !existingTiles.has(p2) && p1 !== p2) {
+            return [p1, p2];
+          }
+        }
+        return null;
+      }
+
+      if (numTiles === 3) {
+        for (let i = 2; i <= Math.min(4, len - 4); i++) {
+          for (let j = i + 2; j <= Math.min(i + 4, len - 2); j++) {
+            const p1 = upper.slice(0, i);
+            const p2 = upper.slice(i, j);
+            const p3 = upper.slice(j);
+            if (p3.length >= 2 && p3.length <= 4 &&
+                !existingTiles.has(p1) && !existingTiles.has(p2) && !existingTiles.has(p3) &&
+                new Set([p1, p2, p3]).size === 3) {
+              return [p1, p2, p3];
+            }
+          }
+        }
+        return null;
+      }
+
+      return null;
+    }
+
+    // Generate bonus round words: shorter words split into 1-3 tiles
+    function generateBonusWords() {
+      const usedTiles = new Set(allTiles.map(t => t.text));
+      const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+
+      const words1 = shuffle(DICTIONARY.filter(w => w.length >= 2 && w.length <= 4));
+      const words2 = shuffle(DICTIONARY.filter(w => w.length >= 5 && w.length <= 8));
+      const words3 = shuffle(DICTIONARY.filter(w => w.length >= 6 && w.length <= 12));
+
+      const targets = [
+        { pool: words1, tileCount: 1 },
+        { pool: words2, tileCount: 2 },
+        { pool: words3, tileCount: 3 },
+        { pool: words2, tileCount: 2 },
+        { pool: words1, tileCount: 1 },
+        { pool: words3, tileCount: 3 },
+        { pool: words2, tileCount: 2 },
+      ];
+
+      const resultWords = [];
+      const resultTileGroups = [];
+
+      for (const { pool, tileCount } of targets) {
+        if (resultWords.length >= 7) break;
+        for (const word of pool) {
+          const upper = word.toUpperCase();
+          if (resultWords.includes(upper)) continue;
+          const parts = splitBonusWord(upper, usedTiles, tileCount);
+          if (parts) {
+            resultWords.push(upper);
+            resultTileGroups.push({ word: upper, parts, tileCount });
+            parts.forEach(p => usedTiles.add(p));
+            break;
+          }
+        }
+      }
+
+      return { resultWords, resultTileGroups };
+    }
+
     // Generate 5 random words from dictionary that can be split without duplicate tiles
     function generateRandomWords() {
       // Filter to only 8-16 letter words suitable for quartiles
@@ -2066,6 +2149,11 @@ enchanted</textarea>
     let hasStarted = false;
     let puzzleId = null; // Used for localStorage key
     let lastSolvedWord = null; // Show last solved word in the current word box
+    let bonusRound = false;
+    let bonusWords = [];
+    let bonusTiles = [];
+    let activeBonusTileIndices = [];
+    let completedBonusWords = [];
 
     // ============================================
     // STATE PERSISTENCE
@@ -2347,6 +2435,7 @@ enchanted</textarea>
     }
 
     function renderGrid() {
+      if (bonusRound) { renderBonusGrid(); return; }
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
 
@@ -2396,6 +2485,37 @@ enchanted</textarea>
       updateCurrentWord();
     }
 
+    function renderBonusGrid() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+
+      activeBonusTileIndices.forEach((tileIdx, displayIdx) => {
+        const tile = bonusTiles[tileIdx];
+        const btn = document.createElement('button');
+        btn.className = 'tile';
+        btn.textContent = tile.text;
+        btn.dataset.tileIndex = tileIdx;
+        btn.dataset.displayIndex = displayIdx;
+
+        if (selectedIndices.includes(displayIdx)) {
+          btn.classList.add('selected');
+        }
+
+        btn.addEventListener('click', () => selectTile(displayIdx));
+        grid.appendChild(btn);
+      });
+
+      // Pad to complete row
+      const remainder = (4 - (activeBonusTileIndices.length % 4)) % 4;
+      for (let i = 0; i < remainder; i++) {
+        const ph = document.createElement('div');
+        ph.className = 'tile placeholder';
+        grid.appendChild(ph);
+      }
+
+      updateCurrentWord();
+    }
+
     function selectTile(displayIndex) {
       if (isAnimating) return;
 
@@ -2406,7 +2526,7 @@ enchanted</textarea>
       const pos = selectedIndices.indexOf(displayIndex);
       if (pos > -1) {
         selectedIndices.splice(pos, 1);
-      } else if (selectedIndices.length < 4) {
+      } else if (selectedIndices.length < (bonusRound ? 3 : 4)) {
         selectedIndices.push(displayIndex);
       }
 
@@ -2433,14 +2553,16 @@ enchanted</textarea>
           currentWord.textContent = lastSolvedWord;
           currentWord.classList.add('has-word');
         } else {
-          currentWord.textContent = 'Words you find appear here';
+          currentWord.textContent = bonusRound ? 'Bonus round! Find smaller words' : 'Words you find appear here';
           currentWord.classList.remove('has-word');
         }
         submitBtn.disabled = true;
       } else {
-        lastSolvedWord = null; // Clear last solved when user starts selecting
+        lastSolvedWord = null;
+        const tileSource = bonusRound ? bonusTiles : allTiles;
+        const activeSource = bonusRound ? activeBonusTileIndices : activeTileIndices;
         const word = selectedIndices
-          .map(di => allTiles[activeTileIndices[di]].text)
+          .map(di => tileSource[activeSource[di]].text)
           .join('');
         currentWord.textContent = word;
         currentWord.classList.add('has-word');
@@ -2457,7 +2579,84 @@ enchanted</textarea>
       }, 2000);
     }
 
+    function submitBonusWord() {
+      if (selectedIndices.length === 0 || isAnimating) return;
+
+      const selectedTileIndices = selectedIndices.map(di => activeBonusTileIndices[di]);
+      const word = selectedTileIndices.map(ti => bonusTiles[ti].text).join('');
+
+      if (foundWords.has(word)) {
+        showMessage('Already found!', 'error');
+        return;
+      }
+
+      // Check if selected tiles all belong to the same bonus word and spell it correctly
+      const wordIndices = selectedTileIndices.map(ti => bonusTiles[ti].bonusWordIndex);
+      if (wordIndices.every(wi => wi === wordIndices[0]) && word === bonusWords[wordIndices[0]]) {
+        const tileCount = selectedIndices.length;
+        const points = tileCount + 1;
+        score += points;
+        foundWords.add(word);
+        completedBonusWords.push({ word, tiles: selectedTileIndices });
+
+        document.getElementById('score').textContent = score;
+        updateRankBar();
+
+        const wordsList = document.getElementById('words-list');
+        const tag = document.createElement('span');
+        tag.className = 'word-tag bonus';
+        tag.textContent = word;
+        wordsList.appendChild(tag);
+
+        lastSolvedWord = word;
+        showMessage(`${word} +${points}`, 'success');
+
+        const tilesToRemove = new Set(selectedTileIndices);
+        activeBonusTileIndices = activeBonusTileIndices.filter(ti => !tilesToRemove.has(ti));
+        selectedIndices = [];
+
+        saveProgress();
+
+        if (activeBonusTileIndices.length === 0) {
+          score += 20;
+          document.getElementById('score').textContent = score;
+          updateRankBar();
+          showMessage('All bonus words found! +20', 'success');
+          setTimeout(showVictory, 1500);
+        } else {
+          renderGrid();
+        }
+        return;
+      }
+
+      // Not a bonus word — check general dictionary
+      const wordLower = word.toLowerCase();
+      if (DICTIONARY.includes(wordLower)) {
+        const points = Math.max(1, word.length - 4);
+        score += points;
+        foundWords.add(word);
+        document.getElementById('score').textContent = score;
+        updateRankBar();
+
+        const wordsList = document.getElementById('words-list');
+        const tag = document.createElement('span');
+        tag.className = 'word-tag bonus';
+        tag.textContent = word;
+        wordsList.appendChild(tag);
+
+        showMessage(`${word} +${points}`, 'success');
+      } else {
+        showMessage('Not a valid word!', 'error');
+      }
+
+      selectedIndices = [];
+      updateTileClasses();
+      updateCurrentWord();
+      saveProgress();
+    }
+
     function submitWord() {
+      if (bonusRound) { submitBonusWord(); return; }
       if (selectedIndices.length === 0 || isAnimating) return;
 
       const selectedTileIndices = selectedIndices.map(di => activeTileIndices[di]);
@@ -2618,7 +2817,7 @@ enchanted</textarea>
           document.getElementById('score').textContent = score;
           updateRankBar();
           showMessage(`${victoryMessage} +40 bonus!`, 'success');
-          setTimeout(showVictory, 1000);
+          setTimeout(startBonusRound, 1000);
         }
 
         // Save progress after each word
@@ -2638,6 +2837,18 @@ enchanted</textarea>
 
     function shuffleTiles() {
       if (isAnimating) return;
+
+      if (bonusRound) {
+        if (activeBonusTileIndices.length <= 1) return;
+        for (let i = activeBonusTileIndices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [activeBonusTileIndices[i], activeBonusTileIndices[j]] = [activeBonusTileIndices[j], activeBonusTileIndices[i]];
+        }
+        selectedIndices = [];
+        renderGrid();
+        return;
+      }
+
       if (activeTileIndices.length <= 1) return;
 
       isAnimating = true;
@@ -2726,11 +2937,49 @@ enchanted</textarea>
       }
     }
 
+    function startBonusRound() {
+      const { resultWords, resultTileGroups } = generateBonusWords();
+      if (resultWords.length === 0) {
+        // Couldn't generate bonus words, go straight to victory
+        showVictory();
+        return;
+      }
+
+      bonusRound = true;
+      bonusWords = resultWords;
+      bonusTiles = [];
+      completedBonusWords = [];
+
+      resultTileGroups.forEach((wordInfo, wordIndex) => {
+        wordInfo.parts.forEach(part => {
+          bonusTiles.push({ text: part, bonusWordIndex: wordIndex });
+        });
+      });
+
+      // Shuffle active bonus tiles
+      activeBonusTileIndices = bonusTiles.map((_, i) => i);
+      for (let i = activeBonusTileIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [activeBonusTileIndices[i], activeBonusTileIndices[j]] = [activeBonusTileIndices[j], activeBonusTileIndices[i]];
+      }
+
+      selectedIndices = [];
+      lastSolvedWord = null;
+
+      showMessage('Bonus round! Find smaller words', 'success');
+      renderGrid();
+    }
+
     function resetGame() {
       stopFireworks();
       document.getElementById('victory').classList.remove('show');
       document.getElementById('current-word').textContent = 'Words you find appear here';
       document.getElementById('current-word').classList.remove('has-word');
+      bonusRound = false;
+      bonusWords = [];
+      bonusTiles = [];
+      activeBonusTileIndices = [];
+      completedBonusWords = [];
       clearProgress(); // Clear saved state
       initGame(true); // Force fresh start
     }
