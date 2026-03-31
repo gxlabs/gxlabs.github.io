@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Quartiles</title>
   <style>
+    :root {
+      --accent-color: #ec4899;
+      --bg-color: #000000;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -13,7 +18,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-      background: #000;
+      background: var(--bg-color);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -30,7 +35,7 @@
 
     /* Setup Screen Styles */
     .setup-header {
-      background: #4285f4;
+      background: var(--accent-color);
       width: 100%;
       padding: 20px;
       padding-top: 60px;
@@ -81,7 +86,7 @@
 
     .setup-container textarea:focus {
       outline: none;
-      box-shadow: 0 0 0 2px #4285f4;
+      box-shadow: 0 0 0 2px var(--accent-color);
     }
 
     .setup-container textarea::placeholder {
@@ -91,7 +96,7 @@
     .btn-generate {
       width: 100%;
       padding: 16px;
-      background: #4285f4;
+      background: var(--accent-color);
       color: white;
       border: none;
       border-radius: 12px;
@@ -159,12 +164,59 @@
       display: block;
     }
 
+    .color-picker-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .color-picker-row label {
+      color: #8e8e93;
+      font-size: 0.9em;
+    }
+
+    .color-picker-row input[type="color"] {
+      width: 50px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .message-input-row {
+      margin-bottom: 16px;
+    }
+
+    .message-input-row label {
+      display: block;
+      color: #8e8e93;
+      font-size: 0.9em;
+      margin-bottom: 8px;
+    }
+
+    .message-input-row input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      background: #2c2c2e;
+      color: white;
+    }
+
+    .message-input-row input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--accent-color);
+    }
+
     /* Game Screen Styles */
     .game-header {
-      background: #4285f4;
+      background: var(--accent-color);
       width: 100%;
       padding: 16px 20px;
-      padding-top: 50px;
+      padding-top: calc(16px + env(safe-area-inset-top, 0px));
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -244,7 +296,7 @@
     }
 
     .current-word-container {
-      background: #4285f4;
+      background: var(--accent-color);
       width: 100%;
       padding: 0 20px 20px 20px;
       border-radius: 0 0 24px 24px;
@@ -276,7 +328,7 @@
     .game-body {
       flex: 1;
       width: 100%;
-      padding: 20px;
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
     }
@@ -284,7 +336,7 @@
     .instruction {
       color: #8e8e93;
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       font-size: 1em;
     }
 
@@ -292,7 +344,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       position: relative;
     }
 
@@ -322,7 +374,7 @@
     }
 
     .tile.selected {
-      background: #4285f4;
+      background: var(--accent-color);
       z-index: 2;
     }
 
@@ -348,7 +400,7 @@
       gap: 50px;
       padding: 0 20px;
       margin-top: auto;
-      padding-bottom: 30px;
+      padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px));
     }
 
     .btn-icon {
@@ -447,6 +499,15 @@
       pointer-events: auto;
     }
 
+    #fireworks-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
     .victory-content {
       background: #1c1c1e;
       padding: 40px;
@@ -455,6 +516,8 @@
       transform: scale(0.8);
       transition: transform 0.5s ease;
       margin: 20px;
+      position: relative;
+      z-index: 1;
     }
 
     .victory.show .victory-content {
@@ -475,13 +538,13 @@
     .victory .final-score {
       font-size: 4em;
       font-weight: 300;
-      color: #4285f4;
+      color: var(--accent-color);
     }
 
     .btn-play-again {
       margin-top: 24px;
       padding: 16px 40px;
-      background: #4285f4;
+      background: var(--accent-color);
       color: white;
       border: none;
       border-radius: 12px;
@@ -523,6 +586,21 @@ beautiful
 celebrate
 wonderful
 enchanted"></textarea>
+
+      <div class="color-picker-row">
+        <label for="color-input">Accent Color</label>
+        <input type="color" id="color-input" value="#ec4899">
+      </div>
+
+      <div class="color-picker-row">
+        <label for="bg-color-input">Background Color</label>
+        <input type="color" id="bg-color-input" value="#000000">
+      </div>
+
+      <div class="message-input-row">
+        <label for="message-input">Victory Message</label>
+        <input type="text" id="message-input" placeholder="Congratulations!">
+      </div>
 
       <button class="btn-generate" id="generate-btn">Generate Puzzle Link</button>
 
@@ -599,8 +677,9 @@ enchanted"></textarea>
   </div>
 
   <div class="victory" id="victory">
+    <canvas id="fireworks-canvas"></canvas>
     <div class="victory-content">
-      <h2>Happy Birthday!</h2>
+      <h2 id="victory-message">Congratulations!</h2>
       <p>You found all the Quartiles!</p>
       <div class="final-score" id="final-score">0</div>
       <p>points</p>
@@ -764,6 +843,7 @@ enchanted"></textarea>
     let foundWords = new Set();
     let score = 0;
     let isAnimating = false;
+    let victoryMessage = 'Congratulations!';
 
     // ============================================
     // SETUP SCREEN
@@ -820,9 +900,15 @@ enchanted"></textarea>
         return;
       }
 
+      // Get customization options
+      const accentColor = document.getElementById('color-input').value.replace('#', '');
+      const bgColor = document.getElementById('bg-color-input').value.replace('#', '');
+      const victoryMessage = document.getElementById('message-input').value || 'Congratulations!';
+      const encodedMessage = btoa(unescape(encodeURIComponent(victoryMessage)));
+
       // Generate the link
       const encoded = encodeWords(words);
-      const url = `${window.location.origin}${window.location.pathname}?q=${encoded}`;
+      const url = `${window.location.origin}${window.location.pathname}?q=${encoded}&color=${accentColor}&bg=${bgColor}&msg=${encodedMessage}`;
 
       document.getElementById('puzzle-link').value = url;
       document.getElementById('generated-link').classList.add('show');
@@ -1154,10 +1240,7 @@ enchanted"></textarea>
         if (completedQuartiles.length === 5) {
           score += 40;
           document.getElementById('score').textContent = score;
-          setTimeout(() => {
-            document.getElementById('final-score').textContent = score;
-            document.getElementById('victory').classList.add('show');
-          }, 300);
+          setTimeout(showVictory, 300);
         }
 
         // Re-render
@@ -1205,6 +1288,7 @@ enchanted"></textarea>
     }
 
     function resetGame() {
+      stopFireworks();
       document.getElementById('victory').classList.remove('show');
       document.getElementById('current-word').textContent = 'Words you find appear here';
       document.getElementById('current-word').classList.remove('has-word');
@@ -1224,12 +1308,150 @@ enchanted"></textarea>
     });
 
     // ============================================
+    // FIREWORKS
+    // ============================================
+
+    let fireworksCanvas, fireworksCtx, fireworksAnimationId;
+    const particles = [];
+
+    function initFireworks() {
+      fireworksCanvas = document.getElementById('fireworks-canvas');
+      fireworksCtx = fireworksCanvas.getContext('2d');
+      resizeFireworksCanvas();
+      window.addEventListener('resize', resizeFireworksCanvas);
+    }
+
+    function resizeFireworksCanvas() {
+      if (fireworksCanvas) {
+        fireworksCanvas.width = window.innerWidth;
+        fireworksCanvas.height = window.innerHeight;
+      }
+    }
+
+    function createFirework(x, y) {
+      const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43'];
+      const particleCount = 80;
+
+      for (let i = 0; i < particleCount; i++) {
+        const angle = (Math.PI * 2 / particleCount) * i;
+        const velocity = 2 + Math.random() * 4;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * velocity,
+          vy: Math.sin(angle) * velocity,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 1,
+          decay: 0.01 + Math.random() * 0.02,
+          size: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    function animateFireworks() {
+      fireworksCtx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05; // gravity
+        p.vx *= 0.99; // friction
+        p.life -= p.decay;
+
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        fireworksCtx.beginPath();
+        fireworksCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        fireworksCtx.fillStyle = p.color;
+        fireworksCtx.globalAlpha = p.life;
+        fireworksCtx.fill();
+      }
+
+      fireworksCtx.globalAlpha = 1;
+      fireworksAnimationId = requestAnimationFrame(animateFireworks);
+    }
+
+    function startFireworks() {
+      initFireworks();
+      animateFireworks();
+
+      const duration = 7000; // 7 seconds
+      const startTime = Date.now();
+
+      // Launch fireworks at intervals
+      const launchFirework = () => {
+        const x = Math.random() * fireworksCanvas.width;
+        const y = Math.random() * fireworksCanvas.height * 0.5;
+        createFirework(x, y);
+      };
+
+      // Initial burst
+      for (let i = 0; i < 5; i++) {
+        setTimeout(launchFirework, i * 200);
+      }
+
+      // Continuous fireworks for duration
+      const fireworkInterval = setInterval(() => {
+        if (Date.now() - startTime > duration || !document.getElementById('victory').classList.contains('show')) {
+          clearInterval(fireworkInterval);
+          return;
+        }
+        launchFirework();
+      }, 600);
+    }
+
+    function stopFireworks() {
+      if (fireworksAnimationId) {
+        cancelAnimationFrame(fireworksAnimationId);
+      }
+      particles.length = 0;
+      if (fireworksCtx) {
+        fireworksCtx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+      }
+    }
+
+    function showVictory() {
+      document.getElementById('victory-message').textContent = victoryMessage;
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('victory').classList.add('show');
+      startFireworks();
+    }
+
+    // ============================================
     // INITIALIZATION
     // ============================================
 
     (function init() {
       const params = new URLSearchParams(window.location.search);
       const encoded = params.get('q');
+      const color = params.get('color');
+      const bgColor = params.get('bg');
+      const msg = params.get('msg');
+
+      // Apply custom accent color if provided
+      if (color) {
+        const hexColor = color.startsWith('#') ? color : `#${color}`;
+        document.documentElement.style.setProperty('--accent-color', hexColor);
+      }
+
+      // Apply custom background color if provided
+      if (bgColor) {
+        const hexBgColor = bgColor.startsWith('#') ? bgColor : `#${bgColor}`;
+        document.documentElement.style.setProperty('--bg-color', hexBgColor);
+      }
+
+      // Decode custom victory message if provided
+      if (msg) {
+        try {
+          victoryMessage = decodeURIComponent(escape(atob(msg)));
+        } catch (e) {
+          victoryMessage = 'Congratulations!';
+        }
+      }
 
       if (encoded) {
         const words = decodeWords(encoded);
