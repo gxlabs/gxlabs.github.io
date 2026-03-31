@@ -845,6 +845,59 @@ enchanted"></textarea>
     let isAnimating = false;
     let victoryMessage = 'Congratulations!';
     let hasStarted = false;
+    let puzzleId = null; // Used for localStorage key
+
+    // ============================================
+    // STATE PERSISTENCE
+    // ============================================
+
+    function getStorageKey() {
+      return puzzleId ? `quartiles_progress_${puzzleId}` : null;
+    }
+
+    function saveProgress() {
+      const key = getStorageKey();
+      if (!key) return;
+
+      const state = {
+        foundWords: Array.from(foundWords),
+        completedQuartiles: completedQuartiles,
+        score: score,
+        activeTileIndices: activeTileIndices
+      };
+
+      try {
+        localStorage.setItem(key, JSON.stringify(state));
+      } catch (e) {
+        console.warn('Could not save progress:', e);
+      }
+    }
+
+    function loadProgress() {
+      const key = getStorageKey();
+      if (!key) return null;
+
+      try {
+        const saved = localStorage.getItem(key);
+        if (saved) {
+          return JSON.parse(saved);
+        }
+      } catch (e) {
+        console.warn('Could not load progress:', e);
+      }
+      return null;
+    }
+
+    function clearProgress() {
+      const key = getStorageKey();
+      if (key) {
+        try {
+          localStorage.removeItem(key);
+        } catch (e) {
+          console.warn('Could not clear progress:', e);
+        }
+      }
+    }
 
     // ============================================
     // SETUP SCREEN
@@ -937,13 +990,9 @@ enchanted"></textarea>
       initGame();
     }
 
-    function initGame() {
+    function initGame(forceReset = false) {
       allTiles = [];
-      activeTileIndices = [];
-      completedQuartiles = [];
       selectedIndices = [];
-      foundWords = new Set();
-      score = 0;
       isAnimating = false;
       hasStarted = false;
 
@@ -961,24 +1010,52 @@ enchanted"></textarea>
         });
       });
 
-      // All tiles start as active
-      activeTileIndices = allTiles.map((_, i) => i);
+      // Try to restore saved progress
+      const savedState = forceReset ? null : loadProgress();
 
-      // Shuffle active tiles
-      for (let i = activeTileIndices.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [activeTileIndices[i], activeTileIndices[j]] = [activeTileIndices[j], activeTileIndices[i]];
+      if (savedState && savedState.completedQuartiles && savedState.completedQuartiles.length > 0) {
+        // Restore saved state
+        foundWords = new Set(savedState.foundWords || []);
+        completedQuartiles = savedState.completedQuartiles || [];
+        score = savedState.score || 0;
+        activeTileIndices = savedState.activeTileIndices || [];
+        hasStarted = true;
+      } else {
+        // Fresh start
+        completedQuartiles = [];
+        foundWords = new Set();
+        score = 0;
+
+        // All tiles start as active
+        activeTileIndices = allTiles.map((_, i) => i);
+
+        // Shuffle active tiles
+        for (let i = activeTileIndices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [activeTileIndices[i], activeTileIndices[j]] = [activeTileIndices[j], activeTileIndices[i]];
+        }
       }
 
-      document.getElementById('score').textContent = 0;
+      document.getElementById('score').textContent = score;
       document.getElementById('words-list').innerHTML = '';
+
+      // Rebuild found words list from saved state
+      const wordsList = document.getElementById('words-list');
+      foundWords.forEach(word => {
+        const tag = document.createElement('span');
+        tag.className = 'word-tag quartile';
+        tag.textContent = word;
+        wordsList.appendChild(tag);
+      });
 
       updateQuartileDots();
       updateRankBar();
       renderGrid();
 
       const instruction = document.getElementById('instruction');
-      if (instruction) instruction.style.visibility = 'visible';
+      if (instruction) {
+        instruction.style.visibility = hasStarted ? 'hidden' : 'visible';
+      }
 
       // Set up event listeners (remove old ones first by cloning)
       const clearBtn = document.getElementById('clear-btn');
@@ -992,6 +1069,11 @@ enchanted"></textarea>
       document.getElementById('clear-btn').addEventListener('click', clearSelection);
       document.getElementById('submit-btn').addEventListener('click', submitWord);
       document.getElementById('shuffle-btn').addEventListener('click', shuffleTiles);
+
+      // Check if game was already won
+      if (completedQuartiles.length === 5) {
+        setTimeout(showVictory, 300);
+      }
     }
 
     function getGridPositions() {
@@ -1249,7 +1331,11 @@ enchanted"></textarea>
         if (completedQuartiles.length === 5) {
           score += 40;
           document.getElementById('score').textContent = score;
+          saveProgress(); // Save final state
           setTimeout(showVictory, 300);
+        } else {
+          // Save progress after each word
+          saveProgress();
         }
 
         // Re-render
@@ -1329,6 +1415,10 @@ enchanted"></textarea>
         selectedIndices = [];
         isAnimating = false;
         renderGrid();
+        // Save shuffle order if game has progress
+        if (foundWords.size > 0) {
+          saveProgress();
+        }
       }, 400);
     }
 
@@ -1355,7 +1445,8 @@ enchanted"></textarea>
       document.getElementById('victory').classList.remove('show');
       document.getElementById('current-word').textContent = 'Words you find appear here';
       document.getElementById('current-word').classList.remove('has-word');
-      initGame();
+      clearProgress(); // Clear saved state
+      initGame(true); // Force fresh start
     }
 
     // Keyboard support
@@ -1494,6 +1585,9 @@ enchanted"></textarea>
       const color = params.get('color');
       const bgColor = params.get('bg');
       const msg = params.get('msg');
+
+      // Set puzzle ID for localStorage (use encoded words as unique ID)
+      puzzleId = encoded;
 
       // Apply custom accent color if provided
       if (color) {
