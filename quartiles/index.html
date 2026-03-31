@@ -1257,16 +1257,70 @@ enchanted"></textarea>
 
     function shuffleTiles() {
       if (isAnimating) return;
+      if (activeTileIndices.length <= 1) return;
 
-      // Only shuffle active tiles (not completed quartiles)
-      for (let i = activeTileIndices.length - 1; i > 0; i--) {
+      isAnimating = true;
+      const grid = document.getElementById('grid');
+      const positions = getGridPositions();
+      const buttons = grid.querySelectorAll('.tile:not(.completed):not(.placeholder)');
+
+      // Store old order and positions
+      const oldOrder = [...activeTileIndices];
+
+      // Create new shuffled order
+      const newOrder = [...activeTileIndices];
+      for (let i = newOrder.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [activeTileIndices[i], activeTileIndices[j]] = [activeTileIndices[j], activeTileIndices[i]];
+        [newOrder[i], newOrder[j]] = [newOrder[j], newOrder[i]];
       }
 
-      // Clear selection and re-render
-      selectedIndices = [];
-      renderGrid();
+      // Build a map from tile index to its button
+      const tileToButton = new Map();
+      buttons.forEach(btn => {
+        const tileIdx = parseInt(btn.dataset.tileIndex);
+        tileToButton.set(tileIdx, btn);
+      });
+
+      // Calculate where each tile needs to go
+      const gridRect = grid.getBoundingClientRect();
+
+      buttons.forEach(btn => {
+        const tileIdx = parseInt(btn.dataset.tileIndex);
+        const oldDisplayIdx = oldOrder.indexOf(tileIdx);
+        const newDisplayIdx = newOrder.indexOf(tileIdx);
+
+        const rect = btn.getBoundingClientRect();
+        const currentLeft = rect.left - gridRect.left;
+        const currentTop = rect.top - gridRect.top;
+
+        // Set up absolute positioning at current location
+        btn.style.position = 'absolute';
+        btn.style.width = `${rect.width}px`;
+        btn.style.height = `${rect.height}px`;
+        btn.style.left = `${currentLeft}px`;
+        btn.style.top = `${currentTop}px`;
+        btn.classList.add('animating');
+        btn.classList.remove('selected');
+
+        // Calculate destination
+        const destPos = positions[newDisplayIdx];
+
+        // Trigger animation to new position
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            btn.style.left = `${destPos.left}px`;
+            btn.style.top = `${destPos.top}px`;
+          });
+        });
+      });
+
+      // After animation completes, update state and re-render
+      setTimeout(() => {
+        activeTileIndices = newOrder;
+        selectedIndices = [];
+        isAnimating = false;
+        renderGrid();
+      }, 400);
     }
 
     function updateQuartileDots() {
