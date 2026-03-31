@@ -333,12 +333,6 @@
       flex-direction: column;
     }
 
-    .instruction {
-      color: #8e8e93;
-      text-align: center;
-      margin-bottom: 16px;
-      font-size: 1em;
-    }
 
     .grid {
       display: grid;
@@ -380,7 +374,8 @@
 
     .tile.completed {
       background: #2c2c2e;
-      border: 2px solid var(--bg-color);
+      outline: 3px solid var(--bg-color);
+      outline-offset: -3px;
       cursor: default;
     }
 
@@ -401,7 +396,7 @@
       gap: 50px;
       padding: 0 20px;
       margin-top: 20px;
-      padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     }
 
     .btn-icon {
@@ -647,8 +642,6 @@ enchanted"></textarea>
     <div class="message" id="message"></div>
 
     <div class="game-body">
-      <div class="instruction" id="instruction">Select a tile to get started</div>
-
       <div class="grid" id="grid"></div>
     </div>
 
@@ -847,6 +840,7 @@ enchanted"></textarea>
     let victoryMessage = 'Congratulations!';
     let hasStarted = false;
     let puzzleId = null; // Used for localStorage key
+    let lastSolvedWord = null; // Show last solved word in the current word box
 
     // ============================================
     // STATE PERSISTENCE
@@ -1014,18 +1008,52 @@ enchanted"></textarea>
       // Try to restore saved progress
       const savedState = forceReset ? null : loadProgress();
 
+      // Validate saved state before restoring
+      let isValidState = false;
       if (savedState && savedState.completedQuartiles && savedState.completedQuartiles.length > 0) {
+        const savedActive = savedState.activeTileIndices || [];
+        const savedCompleted = savedState.completedQuartiles || [];
+
+        // Check all active indices are valid
+        const activeValid = savedActive.every(idx =>
+          Number.isInteger(idx) && idx >= 0 && idx < allTiles.length
+        );
+
+        // Check all completed quartile indices are valid
+        const completedValid = savedCompleted.every(q =>
+          q && Array.isArray(q.tiles) && q.tiles.length === 4 &&
+          q.tiles.every(idx => Number.isInteger(idx) && idx >= 0 && idx < allTiles.length)
+        );
+
+        // Check total tile count matches
+        const completedTileCount = savedCompleted.length * 4;
+        const totalValid = (savedActive.length + completedTileCount) === allTiles.length;
+
+        isValidState = activeValid && completedValid && totalValid;
+      }
+
+      if (isValidState) {
         // Restore saved state
         foundWords = new Set(savedState.foundWords || []);
-        completedQuartiles = savedState.completedQuartiles || [];
+        completedQuartiles = savedState.completedQuartiles;
         score = savedState.score || 0;
-        activeTileIndices = savedState.activeTileIndices || [];
+        activeTileIndices = savedState.activeTileIndices;
         hasStarted = true;
+        // Show the last completed word
+        lastSolvedWord = completedQuartiles.length > 0
+          ? completedQuartiles[completedQuartiles.length - 1].word
+          : null;
       } else {
+        // Clear any invalid saved state
+        if (savedState) {
+          clearProgress();
+        }
+
         // Fresh start
         completedQuartiles = [];
         foundWords = new Set();
         score = 0;
+        lastSolvedWord = null;
 
         // All tiles start as active
         activeTileIndices = allTiles.map((_, i) => i);
@@ -1052,11 +1080,6 @@ enchanted"></textarea>
       updateQuartileDots();
       updateRankBar();
       renderGrid();
-
-      const instruction = document.getElementById('instruction');
-      if (instruction) {
-        instruction.style.visibility = hasStarted ? 'hidden' : 'visible';
-      }
 
       // Set up event listeners (remove old ones first by cloning)
       const clearBtn = document.getElementById('clear-btn');
@@ -1154,8 +1177,6 @@ enchanted"></textarea>
 
       if (!hasStarted) {
         hasStarted = true;
-        const instruction = document.getElementById('instruction');
-        if (instruction) instruction.style.visibility = 'hidden';
       }
 
       const pos = selectedIndices.indexOf(displayIndex);
@@ -1182,13 +1203,18 @@ enchanted"></textarea>
     function updateCurrentWord() {
       const currentWord = document.getElementById('current-word');
       const submitBtn = document.getElementById('submit-btn');
-      const instruction = document.getElementById('instruction');
 
       if (selectedIndices.length === 0) {
-        currentWord.textContent = 'Words you find appear here';
-        currentWord.classList.remove('has-word');
+        if (lastSolvedWord) {
+          currentWord.textContent = lastSolvedWord;
+          currentWord.classList.add('has-word');
+        } else {
+          currentWord.textContent = 'Words you find appear here';
+          currentWord.classList.remove('has-word');
+        }
         submitBtn.disabled = true;
       } else {
+        lastSolvedWord = null; // Clear last solved when user starts selecting
         const word = selectedIndices
           .map(di => allTiles[activeTileIndices[di]].text)
           .join('');
@@ -1301,6 +1327,7 @@ enchanted"></textarea>
         const points = 8;
         score += points;
         foundWords.add(word);
+        lastSolvedWord = word; // Show in current word box
 
         // Store completed quartile with tiles in correct order
         const orderedTileIndices = selectedButtons.map(item => item.ti);
