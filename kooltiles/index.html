@@ -1953,6 +1953,40 @@ enchanted</textarea>
       'zippered', 'zippiest', 'zitherns', 'zonation', 'zoologic', 'zoonosis', 'zucchini'
     ];
 
+    // Short words (1-3 letters) for validation only — not used for puzzle generation
+    const SHORT_WORDS = new Set([
+      // 2-letter words
+      'ad', 'am', 'an', 'as', 'at', 'be', 'by', 'do', 'go', 'he', 'hi', 'if', 'in', 'is', 'it',
+      'me', 'my', 'no', 'of', 'oh', 'on', 'or', 'ox', 'so', 'to', 'up', 'us', 'we', 'yo',
+      // 3-letter words
+      'ace', 'act', 'add', 'age', 'ago', 'aid', 'aim', 'air', 'ale', 'all', 'and', 'ant', 'any',
+      'ape', 'apt', 'arc', 'are', 'ark', 'arm', 'art', 'ash', 'ask', 'ate', 'awe', 'axe', 'aye',
+      'bad', 'bag', 'ban', 'bar', 'bat', 'bay', 'bed', 'bet', 'bid', 'big', 'bit', 'bow', 'box',
+      'boy', 'bud', 'bug', 'bun', 'bus', 'but', 'buy', 'cab', 'can', 'cap', 'car', 'cat', 'cod',
+      'cog', 'cop', 'cow', 'cry', 'cub', 'cup', 'cut', 'dad', 'dam', 'day', 'den', 'dew', 'did',
+      'dig', 'dim', 'dip', 'dog', 'dot', 'dry', 'dub', 'dug', 'duo', 'ear', 'eat', 'egg', 'ego',
+      'elf', 'elm', 'end', 'era', 'eve', 'ewe', 'eye', 'fad', 'fan', 'far', 'fat', 'fax', 'fed',
+      'few', 'fib', 'fig', 'fit', 'fix', 'fly', 'fog', 'for', 'fox', 'fun', 'fur', 'gap', 'gel',
+      'gem', 'get', 'gig', 'gnu', 'god', 'got', 'gun', 'gut', 'guy', 'gym', 'had', 'ham', 'has',
+      'hat', 'hay', 'hen', 'her', 'hid', 'him', 'hip', 'his', 'hit', 'hog', 'hop', 'hot', 'how',
+      'hub', 'hug', 'hum', 'hut', 'ice', 'ill', 'imp', 'ink', 'inn', 'ion', 'ire', 'ivy', 'jab',
+      'jam', 'jar', 'jaw', 'jay', 'jet', 'jot', 'joy', 'jug', 'jut', 'keg', 'key', 'kid', 'kit',
+      'lab', 'lap', 'law', 'lax', 'lay', 'led', 'leg', 'lid', 'lip', 'lit', 'log', 'lot', 'low',
+      'lug', 'mad', 'man', 'map', 'mar', 'mat', 'max', 'may', 'men', 'mid', 'mob', 'mod', 'mop',
+      'mud', 'mug', 'nab', 'nag', 'nap', 'net', 'new', 'nip', 'nod', 'nor', 'not', 'now', 'nun',
+      'oak', 'oar', 'odd', 'ode', 'off', 'oil', 'old', 'one', 'opt', 'orb', 'ore', 'our', 'out',
+      'owe', 'owl', 'own', 'pad', 'pal', 'pan', 'pat', 'paw', 'pay', 'pea', 'peg', 'pen', 'pet',
+      'pie', 'pig', 'pit', 'ply', 'pod', 'pop', 'pot', 'pow', 'pro', 'pub', 'pun', 'pup', 'put',
+      'rag', 'ram', 'ran', 'rap', 'rat', 'raw', 'ray', 'red', 'ref', 'rep', 'rib', 'rid', 'rig',
+      'rip', 'rob', 'rod', 'rot', 'row', 'rub', 'rug', 'rum', 'run', 'rut', 'sad', 'sag', 'sat',
+      'saw', 'say', 'sea', 'set', 'sew', 'she', 'shy', 'sin', 'sip', 'sir', 'sit', 'ski', 'sky',
+      'sly', 'sob', 'sod', 'son', 'sot', 'sow', 'soy', 'spa', 'spy', 'sty', 'sub', 'sue', 'sum',
+      'sun', 'tab', 'tan', 'tap', 'tar', 'tax', 'ten', 'the', 'tin', 'tip', 'toe', 'ton', 'too',
+      'top', 'toy', 'try', 'tub', 'tug', 'two', 'urn', 'use', 'van', 'vat', 'vow', 'wag', 'war',
+      'was', 'wax', 'web', 'wed', 'wet', 'who', 'why', 'wig', 'win', 'wit', 'woe', 'wok', 'won',
+      'woo', 'wry', 'yam', 'yap', 'yaw', 'yew', 'you', 'zap', 'zen', 'zip', 'zoo'
+    ]);
+
     // Try to split a word without throwing, returns null if invalid
     function trySplitWord(word, existingTiles) {
       word = word.toUpperCase().replace(/[^A-Z]/g, '');
@@ -2692,7 +2726,7 @@ enchanted</textarea>
 
       // Not a bonus word — check general dictionary
       const wordLower = word.toLowerCase();
-      if (DICTIONARY.includes(wordLower)) {
+      if (DICTIONARY.includes(wordLower) || SHORT_WORDS.has(wordLower)) {
         const points = Math.max(1, word.length - 4);
         score += points;
         foundWords.add(word);
@@ -2731,7 +2765,7 @@ enchanted</textarea>
       }
 
       const wordLower = word.toLowerCase();
-      if (DICTIONARY.includes(wordLower)) {
+      if (DICTIONARY.includes(wordLower) || SHORT_WORDS.has(wordLower)) {
         const points = Math.max(1, word.length - 4);
         score += points;
         foundWords.add(word);
@@ -2981,6 +3015,12 @@ enchanted</textarea>
       // Calculate where each tile needs to go
       const gridRect = grid.getBoundingClientRect();
 
+      // Offset destination positions below completed rows (not applicable in free play mode)
+      const gridStyle = getComputedStyle(grid);
+      const gap = parseFloat(gridStyle.gap) || 10;
+      const tileSize = (gridRect.width - gap * 3) / 4;
+      const rowOffset = freePlay ? 0 : completedQuartiles.length * (tileSize + gap);
+
       buttons.forEach(btn => {
         const tileIdx = parseInt(btn.dataset.tileIndex);
         const oldDisplayIdx = oldOrder.indexOf(tileIdx);
@@ -2999,14 +3039,14 @@ enchanted</textarea>
         btn.classList.add('animating');
         btn.classList.remove('selected');
 
-        // Calculate destination
+        // Calculate destination (offset below completed rows)
         const destPos = positions[newDisplayIdx];
 
         // Trigger animation to new position
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             btn.style.left = `${destPos.left}px`;
-            btn.style.top = `${destPos.top}px`;
+            btn.style.top = `${destPos.top + rowOffset}px`;
           });
         });
       });
