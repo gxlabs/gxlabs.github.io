@@ -137,6 +137,29 @@
     color: var(--muted);
     margin-right: 6px;
   }
+  .bmc {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0 24px;
+  }
+  .bmc img {
+    width: 140px;
+    height: 140px;
+    border-radius: 6px;
+    background: #fff;
+    padding: 6px;
+    flex-shrink: 0;
+  }
+  .bmc-text { font-size: 0.95rem; }
+  .bmc-text p { margin: 0 0 8px; }
+  @media (max-width: 480px) {
+    .bmc { flex-direction: column; text-align: center; }
+  }
   footer {
     margin-top: 80px;
     padding-top: 24px;
@@ -151,7 +174,7 @@
   <h1>Now Playing Display</h1>
   <p class="tagline">A macOS menu bar app that streams what you're playing (album art, track info, progress) to a USB-connected ESP32-C6 round display.</p>
 
-  <img class="hero" src="screenshot.jpg" alt="The device showing &quot;Electric Relaxation&quot; by A Tribe Called Quest">
+  <img class="hero" src="screenshot.jpg" alt="The device showing &quot;Money&quot; by Pink Floyd">
 
   <span class="pill">macOS 13+</span>
   <span class="pill">Apple Silicon &amp; Intel</span>
@@ -190,6 +213,16 @@
 │ + display │ ─────────────► │   (Mac side)   │ ─────────────────► │  / Spotify, etc  │
 └───────────┘  touch cmds    └────────────────┘   media controls   └──────────────────┘</div>
   <p>The Mac reads now-playing metadata via the bundled <a href="https://github.com/ungive/mediaremote-adapter"><code>MediaRemoteAdapter.framework</code></a>, loaded in-process by <code>/usr/bin/python3</code> (a <code>com.apple.*</code>-signed binary, since macOS 15.4+ only authorizes the private MediaRemote framework for callers with an Apple bundle id, so the bundled py2app Python can't reach it directly). Artwork is converted to RGB565 and pushed to the ESP32 over USB; touches on the round display send prev/play-pause/next back to the Mac.</p>
+
+  <h2>Buy me a coffee</h2>
+  <p>If this project saved you some time or made your desk a little nicer, you can support further work here:</p>
+  <div class="bmc">
+    <a href="https://buymeacoffee.com/yB8tmcbAja"><img src="bmc-qr.png" alt="Buy Me a Coffee QR code"></a>
+    <div class="bmc-text">
+      <p>Scan the QR code, or visit:</p>
+      <p><a href="https://buymeacoffee.com/yB8tmcbAja">buymeacoffee.com/yB8tmcbAja</a></p>
+    </div>
+  </div>
 
   <footer>
     gxlabs.co/now-playing
