@@ -193,7 +193,7 @@
   <h2>Setup</h2>
 
   <h3>1. Flash the firmware</h3>
-  <a class="download" href="./firmware.bin">Download firmware.bin</a>
+  <a class="download" href="https://github.com/gxlabs/now-playing-device/releases/download/v1.0/firmware.bin">Download firmware.bin</a>
   <p>Pre-built firmware is a single merged image (flash to offset <code>0x0</code>).</p>
   <p>Easiest method: open the <a href="https://espressif.github.io/esptool-js/">ESP web tool</a> in Chrome (uses WebSerial), connect to the device, and flash <code>firmware.bin</code> at offset <code>0x0</code>.</p>
   <p>Or via the CLI. Install <code>esptool</code>:</p>
@@ -204,7 +204,7 @@
   <p>Or build from source via ESP-IDF (<code>idf.py build flash</code>) using the <code>firmware/</code> tree in the repo.</p>
 
   <h3>2. Install the Mac app</h3>
-  <a class="download" href="./NowPlayingDisplay.dmg">Download NowPlayingDisplay.dmg</a>
+  <a class="download" href="https://github.com/gxlabs/now-playing-device/releases/download/v1.0/NowPlayingDisplay.dmg">Download NowPlayingDisplay.dmg</a>
   <p>Open the disk image, drag <strong>NowPlayingDisplay.app</strong> to <code>/Applications</code>, and launch it. It auto-detects the ESP32 over USB and reconnects on replug, no configuration.</p>
   <p>To have it start automatically when you log in, click the menu bar icon and toggle <strong>Launch at login</strong>. macOS will list it under System Settings → General → Login Items, where it can be disabled at any time.</p>
 
@@ -214,6 +214,9 @@
 │ + display │ ─────────────► │   (Mac side)   │ ─────────────────► │  / Spotify, etc  │
 └───────────┘  touch cmds    └────────────────┘   media controls   └──────────────────┘</div>
   <p>The Mac reads now-playing metadata via the bundled <a href="https://github.com/ungive/mediaremote-adapter"><code>MediaRemoteAdapter.framework</code></a>, loaded in-process by <code>/usr/bin/python3</code> (a <code>com.apple.*</code>-signed binary, since macOS 15.4+ only authorizes the private MediaRemote framework for callers with an Apple bundle id, so the bundled py2app Python can't reach it directly). Artwork is converted to RGB565 and pushed to the ESP32 over USB; touches on the round display send prev/play-pause/next back to the Mac.</p>
+
+  <h2>Source code</h2>
+  <p>Firmware and Mac app source live at <a href="https://github.com/gxlabs/now-playing-device">github.com/gxlabs/now-playing-device</a>, released under the GNU GPL v3.</p>
 
   <h2>Buy me a coffee</h2>
   <p>If this project saved you some time or made your desk a little nicer, you can support further work here:</p>
