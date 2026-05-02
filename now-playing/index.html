@@ -27,6 +27,14 @@
     margin: 0 auto;
     padding: 80px 24px 120px;
   }
+  .breadcrumbs {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0 0 32px;
+  }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--accent); }
+  .breadcrumbs .sep { margin: 0 8px; opacity: 0.6; }
   h1 {
     font-size: 2.6rem;
     font-weight: 700;
@@ -171,6 +179,9 @@
 </head>
 <body>
 <main>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">gxlabs.co</a><span class="sep">/</span><span aria-current="page">now-playing</span>
+  </nav>
   <h1>Now Playing Display</h1>
   <p class="tagline">A macOS menu bar app that streams what you're playing (album art, track info, progress) to a USB-connected ESP32-C6 round display.</p>
 
