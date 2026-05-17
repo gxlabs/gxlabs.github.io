@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="{{ page.viewport | default: 'width=device-width, initial-scale=1' }}">
+  <title>{{ page.title | default: "gxlabs" }}</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6FZLMTMGYE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-6FZLMTMGYE');
+  </script>
+  <style>
+    .site-header {
+      background-color: #179763;
+      color: #efe;
+      padding: 10px 20px;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      font-size: 0.95rem;
+    }
+    .site-header .site-logo { display: inline-block; line-height: 0; grid-column: 2; justify-self: center; }
+    .site-header .site-logo img { height: 36px; }
+    .site-header .breadcrumbs { grid-column: 1; grid-row: 1; }
+    .site-header .breadcrumbs a { color: #efe; text-decoration: none; }
+    .site-header .breadcrumbs a:hover { text-decoration: underline; }
+    .site-header .breadcrumbs .sep { margin: 0 8px; opacity: 0.6; }
+    .site-footer {
+      background-color: #179763;
+      color: #efe;
+      padding: 16px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      font-size: 0.9rem;
+      margin-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .site-footer a { color: #efe; text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+  </style>
+  {% if page.head_include %}{% include {{ page.head_include }} %}{% endif %}
+</head>
+<body{% if page.body_class %} class="{{ page.body_class }}"{% endif %}>
+{% unless page.url == "/" %}
+<header class="site-header">
+  <a href="/" class="site-logo" aria-label="gxlabs home"><img src="/logo_transparent_400_cropped.png" alt="gxlabs"></a>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><span aria-current="page">{{ page.breadcrumb | default: page.title }}</span>
+  </nav>
+</header>
+{% endunless %}
+{{ content }}
+<footer class="site-footer">
+  <span>Copyright gxlabs LLC {{ site.time | date: '%Y' }}</span>
+  <a href="mailto:enquiries@gxlabs.co">Contact</a>
+</footer>
+</body>
+</html>

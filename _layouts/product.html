@@ -2,24 +2,8 @@
 layout: base
 ---
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<style type="text/css">
-  .jumbotron {
-    color: #efe;
-    background-color: #179763;
-  }
-</style>
 
-{% if page.url == "/" %}
-<div class="jumbotron text-center">
-	<img src="/logo_transparent_400_cropped.png" alt="gxlabs logo" width="200" />
-	<p>
-		An app development company based in Brooklyn, NY
-	</p>
-</div>
-{% endif %}
-<div class="container justify-content-md-center py-4">
-	{{ content }}
-</div>
+{{ content }}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
