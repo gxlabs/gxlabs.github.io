@@ -17,6 +17,6 @@ title: "Zoey Baby"
                 <li>Widgets and Live Activities for the Home Screen, Lock Screen, and Dynamic Island.</li>
             </ul>
         </p>
-        <p>Download on the <a href="https://apps.apple.com/us/app/id6753039929">iOS App Store</a>.</p>
+        <p>Download on the <a href="https://apps.apple.com/us/app/id6786016688">iOS App Store</a>.</p>
     </div>
 </div>
