@@ -20,3 +20,41 @@ title: "Zoey Baby"
         <p>Download on the <a href="https://apps.apple.com/us/app/id6786016688">iOS App Store</a>.</p>
     </div>
 </div>
+
+<div class="row mt-4">
+    <h3>Screenshots</h3>
+</div>
+<div class="row">
+    <div class="col">
+        <img src="/zoey-baby/screenshots/iphone-14-plus-home.png" width="320" alt="Zoey Baby home screen with live breast-feed timer">
+        <p>Home</p>
+    </div>
+    <div class="col">
+        <img src="/zoey-baby/screenshots/iphone-14-plus-trends-activity.png" width="320" alt="Trends: feeds per day, bottle volume, breast feed duration">
+        <p>Trends — activity</p>
+    </div>
+    <div class="col">
+        <img src="/zoey-baby/screenshots/iphone-14-plus-trends-growth.png" width="320" alt="Trends: weight and height charts with WHO percentile overlay">
+        <p>Trends — growth</p>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col">
+        <img src="/zoey-baby/screenshots/iphone-14-plus-edit-breast.png" width="320" alt="Editing a breast feed session with per-side timers">
+        <p>Breast feed timer</p>
+    </div>
+    <div class="col">
+        <img src="/zoey-baby/screenshots/iphone-14-plus-edit-bottle.png" width="320" alt="Logging a bottle feed with amount and content type">
+        <p>Bottle</p>
+    </div>
+    <div class="col">
+        <img src="/zoey-baby/screenshots/iphone-14-plus-edit-diaper.png" width="320" alt="Logging a diaper change with color picker">
+        <p>Diaper</p>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col">
+        <img src="/zoey-baby/screenshots/iphone-14-plus-edit-pump.png" width="320" alt="Editing a pump session with duration and amount">
+        <p>Pump</p>
+    </div>
+</div>
