@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Photo Grid</title>
+<meta name="description" content="Build a photo grid at full source resolution. Everything runs in your browser.">
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --ink: #14161a;
+    --muted: #666e7a;
+    --line: #d9dde3;
+    --accent: #2f6df6;
+    --accent-ink: #ffffff;
+    --danger: #c8382f;
+    --radius: 10px;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --panel: #1c1f25;
+      --ink: #e8eaee;
+      --muted: #9aa2ae;
+      --line: #333941;
+      --accent: #5b8cff;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  /* Class-level `display` beats the UA rule for [hidden], so restate it. */
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    height: 100dvh;
+    /* Height available to the preview; drives .grid's width so the whole
+       collage is visible without scrolling. */
+    --vh: calc(100dvh - 148px);
+  }
+  /* Placed explicitly, so the preview can come first in the DOM (and so
+     first in reading order, and stickable on small screens). */
+  .side  { grid-column: 1; grid-row: 1; }
+  .stage { grid-column: 2; grid-row: 1; }
+
+  /* ---------- sidebar ---------- */
+  .side {
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  h1 { font-size: 17px; margin: 0; letter-spacing: -0.01em; }
+  h1 small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  details {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    min-width: 0;
+  }
+  summary {
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em;
+    cursor: pointer; list-style: none;
+    display: flex; align-items: center; gap: 6px;
+    padding: 2px 0;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "\25B8"; margin-left: auto; transition: transform .15s; }
+  details[open] > summary { margin-bottom: 10px; }
+  details[open] > summary::after { transform: rotate(90deg); }
+
+  .row { display: flex; gap: 10px; align-items: center; }
+  .row + .row { margin-top: 10px; }
+  .row > label { flex: 0 0 auto; color: var(--muted); }
+  .grow { flex: 1 1 auto; min-width: 0; }
+
+  label { font-size: 13px; }
+  .field { display: flex; flex-direction: column; gap: 4px; flex: 1 1 0; min-width: 0; }
+  .field > span { font-size: 12px; color: var(--muted); }
+
+  input[type="number"], input[type="text"], select {
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 8px;
+    min-width: 0;
+  }
+  input[type="color"] {
+    width: 42px; height: 32px; padding: 2px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: var(--bg); cursor: pointer;
+  }
+  input[type="range"] { width: 100%; accent-color: var(--accent); }
+  input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; }
+  input:focus-visible, select:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 1px;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 12px;
+    cursor: pointer;
+  }
+  button:hover:not(:disabled) { border-color: var(--muted); }
+  button:disabled { opacity: .5; cursor: default; }
+  button.primary {
+    background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 600;
+  }
+  button.wide { width: 100%; }
+
+  .hint { font-size: 12px; color: var(--muted); }
+  .warn { font-size: 12px; color: var(--danger); }
+  .out { font-size: 12px; color: var(--muted); }
+  .out b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* ---------- stage ---------- */
+  .stage {
+    position: relative;
+    padding: 20px;
+    /* The preview is sized to fit (see --vh), so it must never introduce a
+       scrollbar — that would narrow the stage, reflow the grid, and
+       oscillate. */
+    overflow: hidden;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .stage-inner { width: 100%; margin: auto; }
+
+  .grid {
+    position: relative;
+    margin-inline: auto;
+    /* Fit the available height as well as the width, so tall grids don't
+       run off the bottom. --ar is the collage's aspect ratio. */
+    width: min(100%, 1100px, calc(var(--vh) * var(--ar, 1)));
+    display: grid;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.16), 0 12px 32px rgba(0,0,0,.10);
+    border-radius: 2px;
+  }
+  .grid.checker {
+    background-image:
+      linear-gradient(45deg, #ccc 25%, transparent 25%),
+      linear-gradient(-45deg, #ccc 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  }
+
+  .cell {
+    position: relative;
+    overflow: hidden;
+    background: rgba(127,127,127,.14);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  /* Preview only — shows where the cell edges are when the grid is gapless. */
+  .cell:not(.filled) { box-shadow: inset 0 0 0 1px rgba(127, 127, 127, .3); }
+  .cell.filled { cursor: grab; background: transparent; }
+  .cell.filled.dragging { cursor: grabbing; }
+  .cell.sel { outline: 2px solid var(--accent); outline-offset: -2px; z-index: 2; }
+  .cell.drop { outline: 2px dashed var(--accent); outline-offset: -2px; z-index: 2; }
+
+  .cell img {
+    position: absolute;
+    left: 0; top: 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    max-width: none;
+  }
+
+  .empty {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: clamp(13px, 2.5vw, 26px);
+    cursor: pointer;
+  }
+
+  .tools {
+    position: absolute; top: 4px; right: 4px;
+    display: flex; gap: 3px;
+    opacity: 0; transition: opacity .12s;
+    z-index: 3;
+  }
+  .cell:hover .tools, .cell.sel .tools { opacity: 1; }
+  /* On touch there's no hover, and small cells have no room — the toolbar
+     under the preview drives the selected cell instead. */
+  @media (pointer: coarse) {
+    .tools { opacity: 1; }
+    .tools button { width: 30px; height: 30px; font-size: 15px; }
+    .tools .handle { display: none; }
+  }
+  .grid.dense .tools { display: none; }
+  .tools button {
+    width: 26px; height: 26px; padding: 0;
+    display: grid; place-items: center;
+    font-size: 13px; line-height: 1;
+    background: rgba(20,22,26,.72); color: #fff;
+    border: 0; border-radius: 6px;
+    cursor: pointer;
+  }
+  .tools button:hover { background: rgba(20,22,26,.92); }
+  .tools .handle { cursor: grab; }
+
+  .stage-bar {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    width: 100%; max-width: min(100%, 1100px);
+    font-size: 12px; color: var(--muted);
+  }
+  .stage-bar .zoomwrap { display: flex; align-items: center; gap: 8px; flex: 1 1 240px; min-width: 160px; }
+  .acts { display: flex; gap: 4px; }
+  .acts button {
+    width: 34px; height: 34px; padding: 0;
+    display: grid; place-items: center; font-size: 15px; line-height: 1;
+  }
+  #sel-info { flex: 1 1 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---------- small screens ---------- */
+  @media (max-width: 860px) {
+    .app { display: block; height: auto; --vh: 48dvh; }
+    .stage {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 10px 8px;
+      overflow: visible;
+      gap: 8px;
+    }
+    .side {
+      border-right: 0;
+      overflow: visible;
+      padding: 14px 12px calc(24px + env(safe-area-inset-bottom));
+    }
+    .stage-bar { gap: 8px; }
+    /* Comfortable hit targets. */
+    .acts button { width: 40px; height: 40px; font-size: 17px; }
+    button { padding: 9px 12px; }
+    input[type="number"], input[type="text"], select { padding: 8px; font-size: 16px; }
+    summary { padding: 6px 0; }
+  }
+
+  .dropzone {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(47,109,246,.10);
+    border: 3px dashed var(--accent);
+    display: none; place-items: center;
+    font-size: 20px; font-weight: 600; color: var(--accent);
+    pointer-events: none;
+  }
+  body.dragover .dropzone { display: grid; }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <main class="stage">
+    <div class="stage-inner">
+      <div class="grid" id="grid"></div>
+    </div>
+    <div class="stage-bar">
+      <div class="zoomwrap">
+        <label for="zoom">Zoom</label>
+        <input type="range" id="zoom" min="1" max="8" step="0.01" value="1" disabled>
+        <output id="zoom-o">100%</output>
+      </div>
+      <div class="acts">
+        <button type="button" id="act-prev" title="Move to previous cell" aria-label="Move to previous cell" disabled>&#8592;</button>
+        <button type="button" id="act-next" title="Move to next cell" aria-label="Move to next cell" disabled>&#8594;</button>
+        <button type="button" id="act-rot" title="Rotate 90&deg;" aria-label="Rotate 90 degrees" disabled>&#10227;</button>
+        <button type="button" id="act-reset" title="Reset framing" aria-label="Reset framing" disabled>&#9974;</button>
+        <button type="button" id="act-del" title="Remove photo" aria-label="Remove photo" disabled>&#10005;</button>
+      </div>
+      <span id="sel-info">Tap a cell to add a photo, then drag to pan and pinch to zoom.</span>
+    </div>
+  </main>
+
+  <aside class="side">
+    <h1>Photo Grid
+      <small>Full-resolution collages, entirely in your browser.</small>
+    </h1>
+
+    <details open>
+      <summary>Grid</summary>
+      <div class="row">
+        <div class="field"><span>Columns</span><input type="number" id="cols" min="1" max="24" step="1" value="3"></div>
+        <div class="field"><span>Rows</span><input type="number" id="rows" min="1" max="24" step="1" value="3"></div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <span>Cell aspect</span>
+          <select id="aspect">
+            <option value="1:1" selected>Square 1:1</option>
+            <option value="4:3">Landscape 4:3</option>
+            <option value="3:2">Landscape 3:2</option>
+            <option value="16:9">Landscape 16:9</option>
+            <option value="3:4">Portrait 3:4</option>
+            <option value="2:3">Portrait 2:3</option>
+            <option value="9:16">Portrait 9:16</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" id="aspect-custom" hidden>
+        <div class="field"><span>Aspect width</span><input type="number" id="aw" min="1" max="10000" step="any" value="1"></div>
+        <div class="field"><span>Aspect height</span><input type="number" id="ah" min="1" max="10000" step="any" value="1"></div>
+      </div>
+    </details>
+
+    <details id="d-style">
+      <summary>Spacing &amp; style</summary>
+      <div class="row">
+        <div class="field"><span>Gap between photos <output id="gap-o">0%</output></span><input type="range" id="gap" min="0" max="20" step="0.5" value="0"></div>
+      </div>
+      <div class="row">
+        <div class="field"><span>Outer padding <output id="margin-o">0%</output></span><input type="range" id="margin" min="0" max="20" step="0.5" value="0"></div>
+      </div>
+      <div class="row">
+        <div class="field"><span>Corner radius <output id="radius-o">0%</output></span><input type="range" id="radius" min="0" max="50" step="1" value="0"></div>
+      </div>
+      <div class="row">
+        <label for="bg">Border colour</label>
+        <input type="color" id="bg" value="#ffffff">
+        <label class="grow"><input type="checkbox" id="transparent"> Transparent</label>
+      </div>
+      <p class="hint">Defaults to gapless — photos butt up edge to edge. Gap, padding and radius are percentages of one cell&rsquo;s width, so they scale with the output.</p>
+    </details>
+
+    <details open>
+      <summary>Photos</summary>
+      <div class="row">
+        <button class="wide" id="add">Add photos…</button>
+      </div>
+      <div class="row">
+        <button class="grow" id="fit-all">Reset all</button>
+        <button class="grow" id="clear">Clear all</button>
+      </div>
+      <p class="hint" id="photo-info">No photos yet. Drop files anywhere, or click an empty cell.</p>
+    </details>
+
+    <details open>
+      <summary>Output</summary>
+      <div class="row">
+        <div class="field">
+          <span>Resolution</span>
+          <select id="outmode">
+            <option value="native" selected>Native — never downscale</option>
+            <option value="custom">Fixed cell width…</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" id="outcustom" hidden>
+        <div class="field"><span>Cell width (px)</span><input type="number" id="cellw" min="16" max="20000" step="1" value="1200"></div>
+      </div>
+      <div class="row">
+        <div class="field"><span>Format</span>
+          <select id="format">
+            <option value="image/png" selected>PNG (lossless)</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" id="qrow" hidden>
+        <div class="field"><span>Quality <output id="q-o">92%</output></span><input type="range" id="quality" min="0.5" max="1" step="0.01" value="0.92"></div>
+      </div>
+      <div class="row">
+        <div class="field"><span>Max canvas dimension (px)</span><input type="number" id="maxdim" min="512" max="65536" step="1" value="16384"></div>
+      </div>
+      <p class="out" id="outinfo">&nbsp;</p>
+      <p class="warn" id="outwarn" hidden></p>
+      <div class="row">
+        <button class="primary wide" id="export">Download image</button>
+      </div>
+      <p class="hint" id="dl-line" hidden></p>
+    </details>
+
+    <p class="hint">Drag to pan &middot; scroll or pinch to zoom &middot; use &#8592;&#8594; to reorder. Nothing is uploaded anywhere.</p>
+  </aside>
+</div>
+
+<div class="dropzone">Drop photos to add them</div>
+<input type="file" id="file" accept="image/*" multiple class="sr">
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  // iOS/iPadOS Safari caps canvas memory far below desktop limits; exceeding
+  // it yields a blank or un-encodable canvas, so plan around it up front.
+  const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+              (/Mac/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+
+  const state = {
+    cols: 3, rows: 3,
+    aw: 1, ah: 1,
+    gap: 0, margin: 0, radius: 0,
+    bg: "#ffffff", transparent: false,
+    outMode: "native", cellW: 1200,
+    maxDim: IOS ? 4096 : 16384,
+    maxArea: IOS ? 16777216 : 268435456,
+    format: "image/png", quality: 0.92,
+    cells: [],          // {img, name, z, cx, cy, rot} | null
+    sel: -1,
+    pendingIndex: 0
+  };
+
+  const gridEl = $("grid");
+  let cellEls = [];
+
+  /* ------------------------------------------------------------------ *
+   * Geometry
+   *
+   * Each cell stores the view as: rotation (0/90/180/270), a zoom factor
+   * z >= 1 relative to "cover", and the image point (cx, cy) — normalised
+   * within the *rotated* image — that sits at the centre of the cell.
+   * That description is independent of pixel size, so the on-screen
+   * preview and the full-resolution export use the exact same maths.
+   * ------------------------------------------------------------------ */
+
+  const aspect = () => state.aw / state.ah;
+
+  // Image dimensions after rotation.
+  function dims(c) {
+    const w = c.img.naturalWidth, h = c.img.naturalHeight;
+    return (c.rot % 180) ? { ew: h, eh: w } : { ew: w, eh: h };
+  }
+
+  // Source-pixels-per-output-pixel scale for a cell drawn at W x H.
+  function scaleFor(c, W, H) {
+    const { ew, eh } = dims(c);
+    return Math.max(W / ew, H / eh) * c.z;
+  }
+
+  // Keep the image covering the cell — no empty corners.
+  function clamp(c) {
+    const a = aspect(), { ew, eh } = dims(c);
+    const s = scaleFor(c, a, 1);
+    const hw = a / (2 * s * ew), hh = 1 / (2 * s * eh);
+    c.cx = hw >= 0.5 ? 0.5 : Math.min(1 - hw, Math.max(hw, c.cx));
+    c.cy = hh >= 0.5 ? 0.5 : Math.min(1 - hh, Math.max(hh, c.cy));
+  }
+
+  // Placement of the image's top-left corner, given a cell of W x H.
+  function placement(c, W, H) {
+    const { ew, eh } = dims(c);
+    const s = scaleFor(c, W, H);
+    return {
+      s,
+      Cx: W / 2 - s * (c.cx - 0.5) * ew,
+      Cy: H / 2 - s * (c.cy - 0.5) * eh
+    };
+  }
+
+  // Source pixels sampled across the cell's width — i.e. the output cell
+  // width at which this photo is reproduced 1:1 with no downscaling.
+  function nativeWidth(c) {
+    const a = aspect();
+    return a / scaleFor(c, a, 1);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Layout
+   * ------------------------------------------------------------------ */
+
+  function totals() {
+    const a = aspect();
+    const g = state.gap / 100 * a, m = state.margin / 100 * a;
+    return {
+      a, g, m,
+      w: state.cols * a + (state.cols - 1) * g + 2 * m,
+      h: state.rows * 1 + (state.rows - 1) * g + 2 * m
+    };
+  }
+
+  function applyLayout() {
+    const t = totals();
+    gridEl.style.aspectRatio = `${t.w} / ${t.h}`;
+    gridEl.style.setProperty("--ar", t.w / t.h);
+    gridEl.classList.toggle("dense", state.cols > 6 || state.rows > 6);
+    gridEl.style.gridTemplateColumns = `repeat(${state.cols}, 1fr)`;
+    gridEl.style.gridTemplateRows = `repeat(${state.rows}, 1fr)`;
+    // Percentage padding always resolves against width; gaps resolve
+    // against their own axis — so each needs its own denominator.
+    gridEl.style.padding = `${t.m / t.w * 100}%`;
+    gridEl.style.columnGap = `${t.g / t.w * 100}%`;
+    gridEl.style.rowGap = `${t.g / t.h * 100}%`;
+    gridEl.style.background = state.transparent ? "" : state.bg;
+    gridEl.classList.toggle("checker", state.transparent);
+    for (const el of cellEls) el.style.borderRadius = `${state.radius}%`;
+  }
+
+  function buildGrid() {
+    const n = state.cols * state.rows;
+    while (state.cells.length < n) state.cells.push(null);
+
+    gridEl.textContent = "";
+    cellEls = [];
+
+    for (let i = 0; i < n; i++) {
+      const el = document.createElement("div");
+      el.className = "cell";
+      el.dataset.i = i;
+
+      const tools = document.createElement("div");
+      tools.className = "tools";
+      tools.innerHTML =
+        '<button type="button" class="handle" draggable="true" data-act="move" title="Drag to swap">&#10495;</button>' +
+        '<button type="button" data-act="rot" title="Rotate 90&deg;">&#10227;</button>' +
+        '<button type="button" data-act="reset" title="Reset framing">&#9974;</button>' +
+        '<button type="button" data-act="del" title="Remove photo">&#10005;</button>';
+
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "+";
+
+      el.append(empty, tools);
+      gridEl.append(el);
+      cellEls.push(el);
+    }
+
+    applyLayout();
+    for (let i = 0; i < n; i++) paintCell(i);
+    if (state.sel >= n) select(-1);
+    updateInfo();
+  }
+
+  function paintCell(i) {
+    const el = cellEls[i], c = state.cells[i];
+    if (!el) return;
+    const empty = el.querySelector(".empty");
+    const tools = el.querySelector(".tools");
+    const old = el.querySelector("img");
+
+    if (!c) {
+      if (old) old.remove();
+      el.classList.remove("filled");
+      empty.hidden = false;
+      tools.hidden = true;
+      return;
+    }
+    el.classList.add("filled");
+    empty.hidden = true;
+    tools.hidden = false;
+    if (old !== c.img) {
+      if (old) old.remove();
+      el.insertBefore(c.img, tools);
+    }
+    transform(i);
+  }
+
+  function transform(i) {
+    const el = cellEls[i], c = state.cells[i];
+    if (!el || !c) return;
+    const r = el.getBoundingClientRect();
+    if (!r.width) return;
+    const iw = c.img.naturalWidth, ih = c.img.naturalHeight;
+    const p = placement(c, r.width, r.height);
+    c.img.style.width = iw + "px";
+    c.img.style.height = ih + "px";
+    c.img.style.transform =
+      `translate(${p.Cx}px, ${p.Cy}px) rotate(${c.rot}deg) ` +
+      `scale(${p.s}) translate(${-iw / 2}px, ${-ih / 2}px)`;
+  }
+
+  const repaintAll = () => { for (let i = 0; i < cellEls.length; i++) transform(i); };
+  new ResizeObserver(repaintAll).observe(gridEl);
+
+  /* ------------------------------------------------------------------ *
+   * Selection & per-cell actions
+   * ------------------------------------------------------------------ */
+
+  const ACTS = ["act-prev", "act-next", "act-rot", "act-reset", "act-del"];
+
+  function select(i) {
+    state.sel = i;
+    cellEls.forEach((el, k) => el.classList.toggle("sel", k === i));
+    const c = i >= 0 ? state.cells[i] : null;
+    const zoom = $("zoom");
+    zoom.disabled = !c;
+    zoom.value = c ? Math.min(8, c.z) : 1;
+    $("zoom-o").textContent = c ? Math.round(c.z * 100) + "%" : "100%";
+    for (const id of ACTS) $(id).disabled = !c;
+    if (c) {
+      $("act-prev").disabled = i <= 0;
+      $("act-next").disabled = i >= state.cols * state.rows - 1;
+    }
+    $("sel-info").textContent = c
+      ? `${c.name} — ${c.img.naturalWidth}×${c.img.naturalHeight}px`
+      : "Tap a cell to add a photo, then drag to pan and pinch to zoom.";
+  }
+
+  function move(i, dir) {
+    const j = i + dir;
+    if (j < 0 || j >= state.cols * state.rows) return;
+    const tmp = state.cells[j];
+    state.cells[j] = state.cells[i];
+    state.cells[i] = tmp;
+    paintCell(i); paintCell(j);
+    select(j);
+    updateInfo();
+  }
+
+  function resetCell(c) { c.z = 1; c.cx = 0.5; c.cy = 0.5; clamp(c); }
+
+  function rotate(i) {
+    const c = state.cells[i];
+    if (!c) return;
+    c.rot = (c.rot + 90) % 360;
+    // Re-express the centre point in the newly rotated frame.
+    const { cx, cy } = c;
+    c.cx = 1 - cy;
+    c.cy = cx;
+    clamp(c);
+    transform(i);
+    updateInfo();
+  }
+
+  function doAct(act, i) {
+    if (i < 0 || !state.cells[i]) return;
+    if (act === "rot") rotate(i);
+    else if (act === "reset") { resetCell(state.cells[i]); transform(i); select(i); updateInfo(); }
+    else if (act === "prev") move(i, -1);
+    else if (act === "next") move(i, 1);
+    else if (act === "del") {
+      state.cells[i] = null;
+      paintCell(i);
+      if (state.sel === i) select(-1);
+      updateInfo();
+    }
+  }
+
+  gridEl.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-act]");
+    const cell = e.target.closest(".cell");
+    if (!cell) return;
+    const i = +cell.dataset.i;
+
+    if (btn) { select(i); doAct(btn.dataset.act, i); return; }
+    if (!state.cells[i]) { state.pendingIndex = i; $("file").click(); return; }
+    select(i);
+  });
+
+  for (const id of ACTS) {
+    $(id).addEventListener("click", () => doAct(id.slice(4), state.sel));
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Pan / zoom
+   * ------------------------------------------------------------------ */
+
+  const pointers = new Map();   // pointerId -> {x, y, i}
+  let pinch = null;
+
+  function zoomAt(i, factor, u, v) {
+    const c = state.cells[i];
+    if (!c) return;
+    const a = aspect(), { ew, eh } = dims(c);
+    const s = scaleFor(c, a, 1);
+    // Image point currently under (u, v), in normalised cell coords.
+    const qx = c.cx + (u - 0.5) * a / (s * ew);
+    const qy = c.cy + (v - 0.5) / (s * eh);
+    c.z = Math.min(50, Math.max(1, c.z * factor));
+    const s2 = scaleFor(c, a, 1);
+    c.cx = qx - (u - 0.5) * a / (s2 * ew);
+    c.cy = qy - (v - 0.5) / (s2 * eh);
+    clamp(c);
+    transform(i);
+    if (state.sel === i) {
+      $("zoom").value = Math.min(8, c.z);
+      $("zoom-o").textContent = Math.round(c.z * 100) + "%";
+    }
+    updateInfo();
+  }
+
+  gridEl.addEventListener("pointerdown", e => {
+    const cell = e.target.closest(".cell");
+    if (!cell || e.target.closest("button")) return;
+    const i = +cell.dataset.i;
+    if (!state.cells[i]) return;
+    cell.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, i });
+    cell.classList.add("dragging");
+    select(i);
+    if (pointers.size === 2) {
+      const [p, q] = [...pointers.values()];
+      pinch = { d: Math.hypot(p.x - q.x, p.y - q.y), i };
+    }
+  });
+
+  gridEl.addEventListener("pointermove", e => {
+    const prev = pointers.get(e.pointerId);
+    if (!prev) return;
+    const i = prev.i, c = state.cells[i];
+    const el = cellEls[i];
+    const r = el.getBoundingClientRect();
+    const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+    prev.x = e.clientX; prev.y = e.clientY;
+
+    if (pointers.size >= 2 && pinch) {
+      const [p, q] = [...pointers.values()];
+      const d = Math.hypot(p.x - q.x, p.y - q.y);
+      if (pinch.d > 0 && d > 0) {
+        const mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2;
+        zoomAt(i, d / pinch.d, (mx - r.left) / r.width, (my - r.top) / r.height);
+      }
+      pinch.d = d;
+      return;
+    }
+
+    const { ew, eh } = dims(c);
+    const s = scaleFor(c, r.width, r.height);
+    c.cx -= dx / (s * ew);
+    c.cy -= dy / (s * eh);
+    clamp(c);
+    transform(i);
+  });
+
+  function endPointer(e) {
+    const p = pointers.get(e.pointerId);
+    if (!p) return;
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinch = null;
+    cellEls[p.i] && cellEls[p.i].classList.remove("dragging");
+  }
+  gridEl.addEventListener("pointerup", endPointer);
+  gridEl.addEventListener("pointercancel", endPointer);
+
+  gridEl.addEventListener("wheel", e => {
+    const cell = e.target.closest(".cell");
+    if (!cell) return;
+    const i = +cell.dataset.i;
+    if (!state.cells[i]) return;
+    e.preventDefault();
+    const r = cell.getBoundingClientRect();
+    const factor = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.02 : 0.0015));
+    select(i);
+    zoomAt(i, factor, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+  }, { passive: false });
+
+  $("zoom").addEventListener("input", e => {
+    const i = state.sel, c = state.cells[i];
+    if (!c) return;
+    zoomAt(i, (+e.target.value) / c.z, 0.5, 0.5);
+  });
+
+  /* ------------------------------------------------------------------ *
+   * Reordering (drag the handle onto another cell)
+   * ------------------------------------------------------------------ */
+
+  let dragFrom = -1;
+
+  gridEl.addEventListener("dragstart", e => {
+    const h = e.target.closest('[data-act="move"]');
+    if (!h) { e.preventDefault(); return; }
+    dragFrom = +h.closest(".cell").dataset.i;
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", String(dragFrom));
+  });
+  gridEl.addEventListener("dragend", () => {
+    dragFrom = -1;
+    cellEls.forEach(el => el.classList.remove("drop"));
+  });
+  gridEl.addEventListener("dragover", e => {
+    const cell = e.target.closest(".cell");
+    if (!cell) return;
+    const files = e.dataTransfer && [...e.dataTransfer.types].includes("Files");
+    if (dragFrom < 0 && !files) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = dragFrom >= 0 ? "move" : "copy";
+    cellEls.forEach(el => el.classList.toggle("drop", el === cell));
+  });
+  gridEl.addEventListener("drop", e => {
+    const cell = e.target.closest(".cell");
+    cellEls.forEach(el => el.classList.remove("drop"));
+    if (!cell) return;
+    const to = +cell.dataset.i;
+    if (e.dataTransfer.files && e.dataTransfer.files.length) {
+      e.preventDefault(); e.stopPropagation();
+      addFiles(e.dataTransfer.files, to);
+      return;
+    }
+    if (dragFrom < 0 || dragFrom === to) return;
+    e.preventDefault();
+    const tmp = state.cells[to];
+    state.cells[to] = state.cells[dragFrom];
+    state.cells[dragFrom] = tmp;
+    paintCell(to); paintCell(dragFrom);
+    dragFrom = -1;
+    updateInfo();
+  });
+
+  /* ------------------------------------------------------------------ *
+   * Loading photos
+   * ------------------------------------------------------------------ */
+
+  function loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(file.name)); };
+      img.alt = "";
+      img.src = url;
+    });
+  }
+
+  async function addFiles(fileList, startAt) {
+    const files = [...fileList].filter(f => f.type.startsWith("image/"));
+    const skipped = fileList.length - files.length;
+    let at = Math.max(0, startAt || 0);
+    const failed = [];
+
+    for (const file of files) {
+      let img;
+      try { img = await loadImage(file); }
+      catch { failed.push(file.name); continue; }
+
+      const cell = { img, name: file.name, z: 1, cx: 0.5, cy: 0.5, rot: 0 };
+      clamp(cell);
+
+      // First free slot at or after the drop point, otherwise append.
+      let i = at;
+      while (i < state.cells.length && state.cells[i]) i++;
+      if (i >= state.cells.length) state.cells.push(null);
+      state.cells[i] = cell;
+      at = i + 1;
+      paintCell(i);
+    }
+
+    updateInfo();
+    if (failed.length || skipped) {
+      const bits = [];
+      if (skipped) bits.push(`${skipped} non-image file${skipped > 1 ? "s" : ""} ignored`);
+      if (failed.length) bits.push(`could not decode: ${failed.join(", ")}`);
+      $("photo-info").textContent = bits.join(" · ");
+    }
+  }
+
+  $("add").addEventListener("click", () => {
+    state.pendingIndex = 0;
+    $("file").click();
+  });
+  $("file").addEventListener("change", e => {
+    addFiles(e.target.files, state.pendingIndex);
+    e.target.value = "";
+  });
+
+  $("clear").addEventListener("click", () => {
+    for (const c of state.cells) if (c) URL.revokeObjectURL(c.img.src);
+    state.cells = [];
+    select(-1);
+    buildGrid();
+  });
+  $("fit-all").addEventListener("click", () => {
+    state.cells.forEach((c, i) => { if (c) { c.rot = 0; resetCell(c); transform(i); } });
+    updateInfo();
+  });
+
+  // Page-wide drop target.
+  let dragDepth = 0;
+  addEventListener("dragenter", e => {
+    if (![...e.dataTransfer.types].includes("Files")) return;
+    dragDepth++; document.body.classList.add("dragover");
+  });
+  addEventListener("dragleave", () => {
+    if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove("dragover"); }
+  });
+  addEventListener("dragover", e => {
+    if ([...e.dataTransfer.types].includes("Files")) e.preventDefault();
+  });
+  addEventListener("drop", e => {
+    dragDepth = 0; document.body.classList.remove("dragover");
+    if (!e.dataTransfer.files.length) return;
+    e.preventDefault();
+    addFiles(e.dataTransfer.files, 0);
+  });
+
+  /* ------------------------------------------------------------------ *
+   * Output sizing
+   * ------------------------------------------------------------------ */
+
+  function plan() {
+    const n = state.cols * state.rows;
+    const a = aspect();
+    let limiter = null, need = 0;
+
+    for (let i = 0; i < n; i++) {
+      const c = state.cells[i];
+      if (!c) continue;
+      const w = nativeWidth(c);
+      if (w > need) { need = w; limiter = c; }
+    }
+
+    let cellW = state.outMode === "custom"
+      ? state.cellW
+      : (need > 0 ? Math.round(need) : state.cellW);
+
+    const layout = w => {
+      const g = Math.round(state.gap / 100 * w);
+      const m = Math.round(state.margin / 100 * w);
+      const h = Math.round(w / a);
+      return {
+        cellW: w, cellH: h, gap: g, margin: m,
+        W: state.cols * w + (state.cols - 1) * g + 2 * m,
+        H: state.rows * h + (state.rows - 1) * g + 2 * m
+      };
+    };
+
+    let L = layout(cellW);
+    let scaled = 1;
+    const max = state.maxDim, area = state.maxArea;
+    const over = l => l.W > max || l.H > max || l.W * l.H > area;
+    if (over(L)) {
+      // Rounding of the per-cell size can leave the total a hair over the
+      // limit, so shrink until it actually fits rather than trusting one pass.
+      let w = cellW;
+      for (let guard = 0; guard < 64 && over(L) && w > 1; guard++) {
+        const k = Math.min(max / L.W, max / L.H, Math.sqrt(area / (L.W * L.H)), 0.999);
+        w = Math.max(1, Math.floor(w * k));
+        L = layout(w);
+      }
+      scaled = L.cellW / cellW;
+    }
+    L.scaled = scaled;
+    L.limiter = limiter;
+    L.filled = state.cells.slice(0, n).filter(Boolean).length;
+    return L;
+  }
+
+  function updateInfo() {
+    const n = state.cols * state.rows;
+    const shown = state.cells.slice(0, n).filter(Boolean).length;
+    const extra = state.cells.slice(n).filter(Boolean).length;
+    $("photo-info").textContent = shown === 0 && extra === 0
+      ? "No photos yet. Drop files anywhere, or click an empty cell."
+      : `${shown} of ${n} cells filled` + (extra ? ` · ${extra} photo${extra > 1 ? "s" : ""} beyond the grid (enlarge it to show them)` : "");
+
+    const L = plan();
+    const mp = (L.W * L.H / 1e6);
+    $("outinfo").innerHTML =
+      `Output <b>${L.W}×${L.H}</b> px (${mp.toFixed(1)} MP) &middot; cells <b>${L.cellW}×${L.cellH}</b>` +
+      (state.outMode === "native" && L.limiter ? `<br>Sized for <b>${L.limiter.name}</b> — every photo drawn at 1:1 or better.` : "");
+
+    const warn = $("outwarn");
+    if (L.scaled < 0.999) {
+      warn.hidden = false;
+      warn.textContent =
+        `Clamped to this browser's canvas limit — photos are downscaled to ` +
+        `${(L.scaled * 100).toFixed(0)}%. Raise the max dimension, or use a ` +
+        `smaller grid, to keep full resolution.`;
+    } else {
+      warn.hidden = true;
+    }
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Render & download
+   * ------------------------------------------------------------------ */
+
+  function render() {
+    const L = plan();
+    const canvas = document.createElement("canvas");
+    canvas.width = L.W;
+    canvas.height = L.H;
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
+    const opaque = !(state.transparent && state.format === "image/png");
+    if (opaque) {
+      ctx.fillStyle = state.transparent ? "#ffffff" : state.bg;
+      ctx.fillRect(0, 0, L.W, L.H);
+    }
+
+    const r = state.radius / 100 * L.cellW;
+    const n = state.cols * state.rows;
+
+    for (let i = 0; i < n; i++) {
+      const c = state.cells[i];
+      if (!c) continue;
+      const col = i % state.cols, row = (i / state.cols) | 0;
+      const x = L.margin + col * (L.cellW + L.gap);
+      const y = L.margin + row * (L.cellH + L.gap);
+
+      ctx.save();
+      ctx.beginPath();
+      if (r > 0 && ctx.roundRect) ctx.roundRect(x, y, L.cellW, L.cellH, r);
+      else ctx.rect(x, y, L.cellW, L.cellH);
+      ctx.clip();
+
+      const p = placement(c, L.cellW, L.cellH);
+      const iw = c.img.naturalWidth, ih = c.img.naturalHeight;
+      ctx.translate(x + p.Cx, y + p.Cy);
+      ctx.rotate(c.rot * Math.PI / 180);
+      ctx.scale(p.s, p.s);
+      ctx.drawImage(c.img, -iw / 2, -ih / 2, iw, ih);
+      ctx.restore();
+    }
+    return canvas;
+  }
+
+  $("export").addEventListener("click", async () => {
+    const btn = $("export");
+    const L = plan();
+    if (!L.filled) { $("dl-line").hidden = false; $("dl-line").textContent = "Add at least one photo first."; return; }
+
+    btn.disabled = true;
+    const label = btn.textContent;
+    btn.textContent = "Rendering…";
+    $("dl-line").hidden = true;
+    // Yield so the label repaints. A timeout, not rAF — rAF is paused in
+    // background tabs, which would leave the button stuck on "Rendering…".
+    await new Promise(r => setTimeout(r, 24));
+
+    try {
+      const canvas = render();
+      const type = state.format;
+      const blob = await new Promise(res => canvas.toBlob(res, type, state.quality));
+      canvas.width = canvas.height = 0;
+      if (!blob) throw new Error("this browser could not encode a canvas that large — lower the max canvas dimension.");
+
+      const ext = type === "image/jpeg" ? "jpg" : type === "image/webp" ? "webp" : "png";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `photo-grid-${state.cols}x${state.rows}-${L.W}x${L.H}.${ext}`;
+      a.click();
+
+      const line = $("dl-line");
+      line.hidden = false;
+      line.innerHTML = "";
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = a.download;
+      link.textContent = `${a.download} (${(blob.size / 1048576).toFixed(1)} MB)`;
+      line.append("Saved: ", link);
+      setTimeout(() => URL.revokeObjectURL(url), 600000);
+    } catch (err) {
+      $("dl-line").hidden = false;
+      $("dl-line").textContent = "Could not export: " + err.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+  });
+
+  /* ------------------------------------------------------------------ *
+   * Controls
+   * ------------------------------------------------------------------ */
+
+  const clampInt = (v, lo, hi, dflt) => {
+    const n = Math.round(Number(v));
+    return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : dflt;
+  };
+
+  $("cols").addEventListener("input", e => {
+    state.cols = clampInt(e.target.value, 1, 24, state.cols);
+    buildGrid();
+  });
+  $("rows").addEventListener("input", e => {
+    state.rows = clampInt(e.target.value, 1, 24, state.rows);
+    buildGrid();
+  });
+
+  function setAspect(w, h) {
+    state.aw = w; state.ah = h;
+    state.cells.forEach(c => { if (c) clamp(c); });
+    applyLayout();
+    repaintAll();
+    updateInfo();
+  }
+
+  $("aspect").addEventListener("change", e => {
+    const custom = e.target.value === "custom";
+    $("aspect-custom").hidden = !custom;
+    if (custom) setAspect(+$("aw").value || 1, +$("ah").value || 1);
+    else {
+      const [w, h] = e.target.value.split(":").map(Number);
+      $("aw").value = w; $("ah").value = h;
+      setAspect(w, h);
+    }
+  });
+  const onCustomAspect = () => setAspect(+$("aw").value || 1, +$("ah").value || 1);
+  $("aw").addEventListener("input", onCustomAspect);
+  $("ah").addEventListener("input", onCustomAspect);
+
+  for (const [id, key, unit] of [["gap", "gap", "%"], ["margin", "margin", "%"], ["radius", "radius", "%"]]) {
+    $(id).addEventListener("input", e => {
+      state[key] = +e.target.value;
+      $(id + "-o").textContent = e.target.value + unit;
+      applyLayout();
+      repaintAll();
+      updateInfo();
+    });
+  }
+
+  $("bg").addEventListener("input", e => { state.bg = e.target.value; applyLayout(); });
+  $("transparent").addEventListener("change", e => {
+    state.transparent = e.target.checked;
+    if (e.target.checked) { $("format").value = "image/png"; state.format = "image/png"; $("qrow").hidden = true; }
+    applyLayout();
+  });
+
+  $("outmode").addEventListener("change", e => {
+    state.outMode = e.target.value;
+    $("outcustom").hidden = e.target.value !== "custom";
+    updateInfo();
+  });
+  $("cellw").addEventListener("input", e => {
+    state.cellW = clampInt(e.target.value, 16, 20000, state.cellW);
+    updateInfo();
+  });
+  $("maxdim").addEventListener("input", e => {
+    state.maxDim = clampInt(e.target.value, 512, 65536, state.maxDim);
+    updateInfo();
+  });
+  $("format").addEventListener("change", e => {
+    state.format = e.target.value;
+    $("qrow").hidden = e.target.value === "image/png";
+    updateInfo();
+  });
+  $("quality").addEventListener("input", e => {
+    state.quality = +e.target.value;
+    $("q-o").textContent = Math.round(state.quality * 100) + "%";
+  });
+
+  addEventListener("keydown", e => {
+    if (e.key === "Escape") select(-1);
+  });
+  addEventListener("beforeunload", e => {
+    if (state.cells.some(Boolean)) { e.preventDefault(); e.returnValue = ""; }
+  });
+
+  // Start with the styling section folded away on small screens, so the
+  // controls that matter most stay within reach of the sticky preview.
+  if (matchMedia("(max-width: 860px)").matches) $("d-style").open = false;
+  else $("d-style").open = true;
+
+  $("maxdim").value = state.maxDim;
+  buildGrid();
+  select(-1);
+})();
+</script>
+</body>
+</html>
