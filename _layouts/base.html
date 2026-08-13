@@ -46,6 +46,14 @@
     }
     .site-footer a { color: #efe; text-decoration: none; }
     .site-footer a:hover { text-decoration: underline; }
+    /* On phones the 1fr auto 1fr grid leaves the breadcrumb too little
+       room and it wraps. Drop to a two-item flex row instead. */
+    @media (max-width: 575.98px) {
+      .site-header { display: flex; justify-content: space-between; padding: 10px 14px; font-size: 0.9rem; }
+      .site-header .breadcrumbs { order: -1; white-space: nowrap; }
+      .site-header .site-logo img { height: 28px; }
+      .site-footer { padding: 14px; font-size: 0.85rem; }
+    }
   </style>
   {% if page.head_include %}{% include {{ page.head_include }} %}{% endif %}
 </head>
