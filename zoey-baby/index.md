@@ -7,7 +7,6 @@ title: "Zoey Baby"
   .app-header { gap: 1.25rem; }
   .app-header img.app-icon { width: 128px; height: 128px; border-radius: 22%; flex: 0 0 auto; }
   .shot-grid img { width: 100%; height: auto; border-radius: 14px; border: 1px solid rgba(0,0,0,.08); }
-  .shot-grid figcaption { margin-top: .5rem; font-size: .95rem; color: #6c757d; }
   .shot-grid .shot { max-width: 320px; margin: 0 auto; }
   @media (max-width: 575.98px) {
     .app-header img.app-icon { width: 96px; height: 96px; }
@@ -37,44 +36,42 @@ title: "Zoey Baby"
 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 shot-grid">
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/iphone-14-plus-home.png" loading="lazy" alt="Zoey Baby home screen with live breast-feed timer">
-            <figcaption>Home</figcaption>
+            <img src="/zoey-baby/screenshots/01-home.png" loading="lazy" alt="Home screen with quick action buttons and today's summary">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/iphone-14-plus-trends-activity.png" loading="lazy" alt="Trends: feeds per day, bottle volume, breast feed duration">
-            <figcaption>Trends: activity</figcaption>
+            <img src="/zoey-baby/screenshots/02-sharing.png" loading="lazy" alt="Family sharing settings, shared with a partner over iCloud">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/iphone-14-plus-trends-growth.png" loading="lazy" alt="Trends: weight and height charts with WHO percentile overlay">
-            <figcaption>Trends: growth</figcaption>
+            <img src="/zoey-baby/screenshots/03-glance.png" loading="lazy" alt="Notifications, Dynamic Island and Home Screen widgets">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/iphone-14-plus-edit-breast.png" loading="lazy" alt="Editing a breast feed session with per-side timers">
-            <figcaption>Breast feed timer</figcaption>
+            <img src="/zoey-baby/screenshots/04-vitals.png" loading="lazy" alt="Live heart rate, oxygen and sleep state from Home Assistant">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/iphone-14-plus-edit-bottle.png" loading="lazy" alt="Logging a bottle feed with amount and content type">
-            <figcaption>Bottle</figcaption>
+            <img src="/zoey-baby/screenshots/05-trends.png" loading="lazy" alt="Today's totals compared against the last week">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/iphone-14-plus-edit-diaper.png" loading="lazy" alt="Logging a diaper change with color picker">
-            <figcaption>Diaper</figcaption>
+            <img src="/zoey-baby/screenshots/06-growth.png" loading="lazy" alt="Weight, height and head circumference on WHO percentile curves">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/iphone-14-plus-edit-pump.png" loading="lazy" alt="Editing a pump session with duration and amount">
-            <figcaption>Pump</figcaption>
+            <img src="/zoey-baby/screenshots/07-data.png" loading="lazy" alt="Import and export the whole history as a ZIP">
+        </figure>
+    </div>
+    <div class="col mb-4">
+        <figure class="shot mb-0">
+            <img src="/zoey-baby/screenshots/08-privacy.png" loading="lazy" alt="Photo privacy settings, blurring photos away from home">
         </figure>
     </div>
 </div>
