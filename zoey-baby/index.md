@@ -51,27 +51,17 @@ title: "Zoey Baby"
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/04-vitals.png" loading="lazy" alt="Live heart rate, oxygen and sleep state from Home Assistant">
+            <img src="/zoey-baby/screenshots/04-trends.png" loading="lazy" alt="Today's totals compared against the last week">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/05-trends.png" loading="lazy" alt="Today's totals compared against the last week">
+            <img src="/zoey-baby/screenshots/05-growth.png" loading="lazy" alt="Weight, height and head circumference on WHO percentile curves">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/06-growth.png" loading="lazy" alt="Weight, height and head circumference on WHO percentile curves">
-        </figure>
-    </div>
-    <div class="col mb-4">
-        <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/07-data.png" loading="lazy" alt="Import and export the whole history as a ZIP">
-        </figure>
-    </div>
-    <div class="col mb-4">
-        <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/08-privacy.png" loading="lazy" alt="Photo privacy settings, blurring photos away from home">
+            <img src="/zoey-baby/screenshots/06-privacy.png" loading="lazy" alt="Photo privacy settings, blurring photos away from home">
         </figure>
     </div>
 </div>
