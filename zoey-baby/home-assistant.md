@@ -41,20 +41,24 @@ it.
 
 The app only lists `sensor.` and `binary_sensor.` entities.
 
-### 3. A public https URL
+### 3. A URL that works away from the house
 
-Your phone has to reach Home Assistant wherever you happen to be, not
-only at home, and iOS won't open a plain `http://` connection. The URL
-you give the app has to start with `https://` and work from outside
-your house. A local address like `http://homeassistant.local:8123` will
-not work.
+On your home wifi a local address is fine, and the app will take one:
+`http://homeassistant.local:8123` connects and reads sensors like any
+other. It stops the moment you leave, because that address only
+resolves on your own network, and the readings stop with it.
 
-Two usual ways to get one:
+So if you want vitals and naps while you are out, which is most of the
+point, give the app an address that reaches your instance from
+anywhere. In practice that means an `https://` one:
 
 * [Home Assistant Cloud](https://www.nabucasa.com/) hands you a
   `https://….ui.nabu.casa` address with nothing to configure.
 * Or set up [remote access](https://www.home-assistant.io/docs/configuration/remote/)
   yourself, with your own domain and certificate.
+
+Either one works at home too, so it goes in the app once and you can
+forget about it.
 
 ### 4. A long-lived access token
 
@@ -141,9 +145,10 @@ sensors."** The connection is fine and the device isn't in Home
 Assistant. Check the integration for your camera or sock is set up and
 that its entities aren't disabled.
 
-**Nothing connects at all.** Open the same URL in Safari on your phone
-with wifi off. If it doesn't load on cellular, the address isn't
-reachable from outside your home yet and that's the piece to fix first.
+**It works at home and not out.** Open the same URL in Safari on your
+phone with wifi off. A local address won't load, by design, and that is
+the thing to swap for a public one. If a public address doesn't load
+either, fix it in Home Assistant before coming back to the app.
 
 **Readings go blank or stale.** A sock on its base reports nothing
 useful, and the app drops a zero heart rate rather than showing it.
