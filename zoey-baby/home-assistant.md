@@ -112,11 +112,11 @@ Sensor settings live on the family record, so a partner who joined your
 iCloud share picks up the same URL, token and entity choices without
 typing any of it again.
 
-## Sleep tracking
+## Automatic nap creation
 
-With at least one sleep sensor picked, **Track sleep** appears under
-Sensors. Turn it on and the app pulls the sensor's history and keeps it
-up to date:
+Pick a sleep sensor and an **Automatic nap creation** section appears
+under Sensors. Switch it on and the app pulls the sensor's history and
+keeps it up to date:
 
 * Each day gets awake, asleep and deep totals.
 * Each stretch of sleep becomes a nap on the Home timeline.
