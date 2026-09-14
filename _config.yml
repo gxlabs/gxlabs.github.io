@@ -1,0 +1,8 @@
+# The Zoey Baby pages carry the app's own icon; the rest of the site
+# falls back to the gxlabs mark in _layouts/base.html.
+defaults:
+  - scope:
+      path: "zoey-baby"
+    values:
+      favicon: "/media/zoey-baby-app-32.png"
+      touch_icon: "/media/zoey-baby-app-180.png"

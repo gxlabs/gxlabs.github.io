@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="{{ page.viewport | default: 'width=device-width, initial-scale=1' }}">
   <title>{{ page.title | default: "gxlabs" }}</title>
+  {% if page.favicon %}
+  <link rel="icon" type="image/png" href="{{ page.favicon }}">
+  <link rel="apple-touch-icon" href="{{ page.touch_icon | default: page.favicon }}">
+  {% endif %}
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6FZLMTMGYE"></script>
   <script>
