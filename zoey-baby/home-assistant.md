@@ -72,6 +72,13 @@ walk through it, or go straight to
 The token is what the app authenticates with. Deleting it in Home
 Assistant is how you revoke the app's access.
 
+Zoey Baby keeps the token in the iOS keychain rather than in ordinary
+settings, and an exported backup carries it encrypted: the ZIP holds
+the URL and the token sealed under a key in your iCloud keychain, so
+they open on your own devices and read as blank on anyone else's. Your
+entity names go in as plain text, since they name sensors rather than
+secrets.
+
 ## Setting it up in the app
 
 1. Open **Settings**, then **Sensors**.
@@ -85,15 +92,18 @@ the usual way arrives with most slots already filled. Anything the app
 guesses wrong you can change, and a slot you picked yourself is never
 overwritten.
 
-| Slot | What it reads |
-| --- | --- |
-| Heart rate | a number, in bpm |
-| Oxygen | a number, in % |
-| Sleep state | text: `awake`, `light_sleep`, `deep_sleep` |
-| Camera sleep | on or off |
-| Charging | on or off, so time on the base doesn't read as the sensor dropping out |
-| Battery % | a number, 0 to 100 |
-| Skin temp | a number, in °F or °C |
+| Slot | Entity | What it reads |
+| --- | --- | --- |
+| Heart rate | [`sensor`][sensor] | a number, in bpm |
+| Oxygen | [`sensor`][sensor] | a number, in % |
+| Sleep state | [`sensor`][sensor] | text: `awake`, `light_sleep`, `deep_sleep` |
+| Camera sleep | [`binary_sensor`][binary] | [on or off][binary] |
+| Charging | [`binary_sensor`][binary] | [on or off][binary], so time on the base doesn't read as the sensor dropping out |
+| Battery % | [`sensor`][sensor] | a number, 0 to 100 |
+| Skin temp | [`sensor`][sensor] | a number, in °F or °C |
+
+[sensor]: https://www.home-assistant.io/integrations/sensor/
+[binary]: https://www.home-assistant.io/integrations/binary_sensor/
 
 Each picker is filtered to entities of the right shape and shows what
 they read right now, alongside how long ago, so you can tell a good
