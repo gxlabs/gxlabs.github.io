@@ -33,7 +33,10 @@ If you don't run one yet, start with the
 Zoey Baby needs no add-on and no custom component of its own, just an
 instance you can sign in to.
 
-### 2. Your camera or sock set up in Home Assistant
+### 2. Your baby monitor camera and/or smart sock, set up in Home Assistant
+
+Either one on its own is enough, and the app uses both together if you
+have both.
 
 Zoey Baby reads entities, it doesn't talk to the devices. Getting your
 camera or sock into Home Assistant is a Home Assistant job: an official
