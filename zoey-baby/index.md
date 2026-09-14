@@ -22,13 +22,14 @@ title: "Zoey Baby"
             <li>Track bottle and breast feedings, diapers, pumping, and growth.</li>
             <li>Live breast-feed and pump timers in the Dynamic Island, with Lock Screen controls.</li>
             <li>Sync with your partner over iCloud. No accounts, no third-party servers, no ads.</li>
-            <li>Home Assistant integration for baby monitor heart rate, oxygen, skin temperature, and sleep state.</li>
+            <li><a href="/zoey-baby/home-assistant">Home Assistant integration</a> for baby monitor heart rate, oxygen, skin temperature, and sleep state.</li>
             <li>Sleep alerts when the sensor reports your baby falling asleep, going deep, or waking up.</li>
             <li>Siri support: log feeds, ask when the last diaper was, all in your Settings unit.</li>
             <li>Home Screen widgets you configure per baby, plus Live Activities on the Lock Screen and Dynamic Island.</li>
             <li>Trends over 7 days, 30 days, or all time, and growth charts against WHO percentile curves.</li>
         </ul>
         <p>Download on the <a href="https://apps.apple.com/us/app/id6786016688">iOS App Store</a>.</p>
+        <p>Setting up the sensors? See the <a href="/zoey-baby/home-assistant">Home Assistant guide</a>.</p>
     </div>
 </div>
 
@@ -36,32 +37,37 @@ title: "Zoey Baby"
 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 shot-grid">
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/01-home.png" loading="lazy" alt="Home screen with quick action buttons and today's summary">
+            <img src="/zoey-baby/screenshots/01-home.png" loading="lazy" alt="Home screen with vitals, quick actions, today's totals and the day's timeline">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/02-sharing.png" loading="lazy" alt="Family sharing settings, shared with a partner over iCloud">
+            <img src="/zoey-baby/screenshots/02-glance.png" loading="lazy" alt="Lock Screen controls, a breast feed timer in the Dynamic Island, widgets and notifications">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/03-glance.png" loading="lazy" alt="Notifications, Dynamic Island and Home Screen widgets">
+            <img src="/zoey-baby/screenshots/03-caregivers.png" loading="lazy" alt="Invite code for sharing a baby's records with another caregiver">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/04-trends.png" loading="lazy" alt="Today's totals compared against the last week">
+            <img src="/zoey-baby/screenshots/04-trends.png" loading="lazy" alt="The last seven days compared against the week before, and feeds per day">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/05-growth.png" loading="lazy" alt="Weight, height and head circumference on WHO percentile curves">
+            <img src="/zoey-baby/screenshots/05-growth.png" loading="lazy" alt="Weight and height plotted against WHO percentile curves">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/zoey-baby/screenshots/06-privacy.png" loading="lazy" alt="Photo privacy settings, blurring photos away from home">
+            <img src="/zoey-baby/screenshots/06-siri.png" loading="lazy" alt="Siri phrases for logging a diaper, starting a breast feed, and asking when the last feed was">
+        </figure>
+    </div>
+    <div class="col mb-4">
+        <figure class="shot mb-0">
+            <img src="/zoey-baby/screenshots/07-privacy.png" loading="lazy" alt="Photo grid with photos blurred while away from home">
         </figure>
     </div>
 </div>
