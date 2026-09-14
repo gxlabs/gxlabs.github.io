@@ -93,11 +93,6 @@ secrets.
 4. Tap **Connect**. The app checks the token, then loads your entities.
 5. Pick the entity behind each reading.
 
-Entity names get a look on connect, so a sock whose entities are named
-the usual way arrives with most slots already filled. Anything the app
-guesses wrong you can change, and a slot you picked yourself is never
-overwritten.
-
 | Slot | Entity | What it reads |
 | --- | --- | --- |
 | Heart rate | [`sensor`][sensor] | a number, in bpm |
@@ -111,10 +106,7 @@ overwritten.
 [sensor]: https://www.home-assistant.io/integrations/sensor/
 [binary]: https://www.home-assistant.io/integrations/binary_sensor/
 
-Each picker is filtered to entities of the right shape and shows what
-they read right now, alongside how long ago, so you can tell a good
-pick from a wrong one before you leave the screen. Nothing else is
-required: fill in only the slots you have a sensor for.
+Fill in only the slots you have a sensor for.
 
 Sensor settings live on the family record, so a partner who joined your
 iCloud share picks up the same URL, token and entity choices without
