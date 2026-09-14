@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Zoey Baby - privacy policy"
+breadcrumb: "Privacy policy"
+parent: "Zoey Baby"
+parent_url: /zoey-baby
 ---
 
 **Privacy Policy**

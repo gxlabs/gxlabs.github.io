@@ -55,6 +55,9 @@
     @media (max-width: 575.98px) {
       .site-header { display: flex; justify-content: space-between; padding: 10px 14px; font-size: 0.9rem; }
       .site-header .breadcrumbs { order: -1; white-space: nowrap; }
+      /* Three crumbs don't fit beside the logo, and the logo is the
+         same link, so the root drops off. */
+      .site-header .breadcrumbs.nested .crumb-root { display: none; }
       .site-header .site-logo img { height: 28px; }
       .site-footer { padding: 14px; font-size: 0.85rem; }
     }
@@ -65,8 +68,8 @@
 {% unless page.url == "/" %}
 <header class="site-header">
   <a href="/" class="site-logo" aria-label="gxlabs home"><img src="/logo_transparent_400_cropped.png" alt="gxlabs"></a>
-  <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a href="/">Home</a><span class="sep">/</span><span aria-current="page">{{ page.breadcrumb | default: page.title }}</span>
+  <nav class="breadcrumbs{% if page.parent_url %} nested{% endif %}" aria-label="Breadcrumb">
+    <span class="crumb-root"><a href="/">Home</a><span class="sep">/</span></span>{% if page.parent_url %}<a href="{{ page.parent_url }}">{{ page.parent | default: page.parent_url }}</a><span class="sep">/</span>{% endif %}<span aria-current="page">{{ page.breadcrumb | default: page.title }}</span>
   </nav>
 </header>
 {% endunless %}

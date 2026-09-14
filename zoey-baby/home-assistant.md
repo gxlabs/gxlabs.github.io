@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Zoey Baby - Home Assistant"
+breadcrumb: "Home Assistant"
+parent: "Zoey Baby"
+parent_url: /zoey-baby
 ---
 
 <style>

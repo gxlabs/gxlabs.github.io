@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Zoey Baby - terms and conditions"
+breadcrumb: "Terms & conditions"
+parent: "Zoey Baby"
+parent_url: /zoey-baby
 ---
 
 **Terms & Conditions**
