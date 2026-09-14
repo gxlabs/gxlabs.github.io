@@ -19,14 +19,19 @@ title: "Zoey Baby"
         <h3 class="mt-0"><a href="/zoey-baby">Zoey Baby</a></h3>
         <p>A fast, private baby tracker. Feedings, diapers, pumping, and growth, synced between you and your partner over iCloud.</p>
         <ul class="text-left">
-            <li>Track bottle and breast feedings, diapers, pumping, and growth.</li>
-            <li>Live breast-feed and pump timers in the Dynamic Island, with Lock Screen controls.</li>
-            <li>Sync with your partner over iCloud. No accounts, no third-party servers, no ads.</li>
-            <li><a href="/zoey-baby/home-assistant">Home Assistant integration</a> for baby monitor heart rate, oxygen, skin temperature, and sleep state.</li>
+            <li>Log bottles, breast feeds, diapers, pumping, naps, growth, temperature and medicine, with a photo on anything you log.</li>
+            <li>Live breast feed and pump timers that either parent can start, switch sides on, or stop, from whichever phone is nearest.</li>
+            <li>Sync with your partner over iCloud, with a ping when they log something. No accounts, no third-party servers, no ads.</li>
+            <li><a href="/zoey-baby/home-assistant">Home Assistant integration</a> for camera and smart sock readings: heart rate, oxygen, skin temperature, and sleep state.</li>
+            <li>Naps written down from the sensor and rolled up into daily awake, asleep, and deep totals. A nap you log or end by hand stays exactly as you left it.</li>
             <li>Sleep alerts when the sensor reports your baby falling asleep, going deep, or waking up.</li>
+            <li>Nap prediction off the wake windows your baby actually keeps, with an alert before the next likely sleep or wake.</li>
+            <li>Photos that blur themselves whenever you are away from home, on the kinds of event you choose.</li>
             <li>Siri support: log feeds, ask when the last diaper was, all in your Settings unit.</li>
-            <li>Home Screen widgets you configure per baby, plus Live Activities on the Lock Screen and Dynamic Island.</li>
+            <li>Home Screen widgets you configure per baby, an Apple Watch app for logging from your wrist, and Live Activities on the Lock Screen and Dynamic Island.</li>
             <li>Trends over 7 days, 30 days, or all time, and growth charts against WHO percentile curves.</li>
+            <li>Pump reminders at the times you set.</li>
+            <li>Export a whole history, photos included, as a single file you can import again later, or bring one over from Nara.</li>
         </ul>
         <p>Download on the <a href="https://apps.apple.com/us/app/id6786016688">iOS App Store</a>.</p>
         <p>Setting up the sensors? See the <a href="/zoey-baby/home-assistant">Home Assistant guide</a>.</p>
