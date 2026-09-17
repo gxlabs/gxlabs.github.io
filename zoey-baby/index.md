@@ -31,10 +31,10 @@ title: "Zoey Baby"
             <li>Home Screen widgets you configure per baby, an Apple Watch app for logging from your wrist, and Live Activities on the Lock Screen and Dynamic Island.</li>
             <li>Trends over 7 days, 30 days, or all time, and growth charts against WHO percentile curves.</li>
             <li>Pump reminders at the times you set.</li>
-            <li>Export a whole history, photos included, as a single file you can import again later, or bring one over from Nara.</li>
+            <li>Export a whole history, photos included, as a single file you can import again later, or bring one over from another app.</li>
         </ul>
         <p>Download on the <a href="https://apps.apple.com/us/app/id6786016688">iOS App Store</a>.</p>
-        <p>Setting up the sensors? See the <a href="/zoey-baby/home-assistant">Home Assistant guide</a>.</p>
+        <p>Setting up the sensors? See the <a href="/zoey-baby/home-assistant">Home Assistant guide</a>. Coming from another app? See the <a href="/zoey-baby/export-converter">import format guide</a>.</p>
     </div>
 </div>
 
