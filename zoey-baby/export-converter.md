@@ -18,8 +18,8 @@ parent_url: /zoey-baby
 
 Zoey Baby imports one thing: a ZIP holding a `data.json` file, the same
 archive its own export writes. That is also how you bring history over
-from another tracker — turn its export into this ZIP and the app reads
-it like one of its own backups.
+from another tracker. Turn its export into this ZIP and the app reads it
+like one of its own backups.
 
 Import from **Settings → Privacy & data → Import Zoey Baby ZIP**, or
 from the Import button during first-run setup.
@@ -115,8 +115,8 @@ doesn't know are ignored, so extra fields of your own are harmless.
 
 Times are ISO 8601 with an offset (`2026-09-16T08:37:31-04:00`).
 Volumes are millilitres, weight is kilograms, lengths are centimetres,
-temperature is Celsius — the app converts to whatever units the phone
-is set to. `id` is an integer unique within its own section, and its
+temperature is Celsius. The app converts to whatever units the phone is
+set to. `id` is an integer unique within its own section, and its
 only job is to attach a photo; numbering each section from 1 is fine.
 
 ### feedings
@@ -160,7 +160,7 @@ the section out if the other app only kept daily totals.
 | Field | Required | Notes |
 | --- | --- | --- |
 | `start` | yes | |
-| `end` | no | Null means still running — leave a real end on every historical nap. |
+| `end` | no | Null means still running, so leave a real end on every historical nap. |
 | `manual` | yes | True for a nap a person logged; a sensor never moves those afterwards. |
 | `notes` | no | |
 
@@ -189,7 +189,7 @@ the section out if the other app only kept daily totals.
 | Field | Required | Notes |
 | --- | --- | --- |
 | `id` | yes | Photo key. |
-| `time`, `celsius` | yes | A row missing either is skipped — there is no reading to keep. |
+| `time`, `celsius` | yes | A row missing either is skipped, since there is no reading to keep. |
 | `method` | no | `forehead`, `ear`, `armpit`, `oral`, `rectal` |
 | `notes` | no | |
 
@@ -211,7 +211,7 @@ is optional.
 | Field | Notes |
 | --- | --- |
 | `firstName`, `lastName` | |
-| `sex` | `girls` or `boys` — it picks the WHO growth curve. |
+| `sex` | `girls` or `boys`, which picks the WHO growth curve. |
 | `birthDate` | |
 | `photoPath` | Path inside the ZIP, `images/child/1.jpg` by convention. |
 
@@ -236,8 +236,16 @@ Leave both out of a converted archive.
    must be present even when empty.
 4. **Zip it**, with `data.json` at the top of the archive or inside a
    single folder.
-5. **Get it onto the phone** — AirDrop, or save it to Files — and
+5. **Get it onto the phone**, by AirDrop or by saving it to Files, and
    import it.
+
+Steps 2 and 3 are the fiddly ones by hand, and they are exactly what a
+modern AI tool is good at. Paste this page and a sample of your export
+into ChatGPT, Claude, or whichever you use, and ask it to convert the
+whole file to Zoey Baby's `data.json` format. Give it the real export
+rather than a description of it, and check the result before importing:
+the row counts should match your export, and the first and last dates
+should be the ones you expect.
 
 A row that matches an event already stored, by kind and timestamp,
 updates that event rather than adding a second one. So a correction is
