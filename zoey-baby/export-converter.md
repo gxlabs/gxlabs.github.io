@@ -158,6 +158,7 @@ Inside one entry of `children`:
 | `medication` | no | Doses given. |
 | `child` | no | Name, birth date, sex and profile photo. |
 | `childName` | no | The same first name, for the import's own wording. |
+| `sensors` | no | The Home Assistant entities this child's readings come from. |
 
 Those four required keys have to be present on every child, even when
 empty.
@@ -281,6 +282,19 @@ child after.
 | `birthDate` | |
 | `photoPath` | Path inside the ZIP, `images/<n>/child/1.jpg` by convention. |
 
+### sensors
+
+Which sock and camera are this child's. The connection they are read
+through is the family's, under `homeAssistant`. Written by the app's
+own export; a converted archive can leave it out.
+
+| Field | Notes |
+| --- | --- |
+| `sleepStateEntity`, `cameraSleepEntity` | The two sleep sources. |
+| `heartRateEntity`, `oxygenEntity`, `skinTempEntity` | Vitals. |
+| `chargingEntity`, `batteryEntity` | The sock's own state. |
+| `trackSleep` | Whether this child's sensor history is rolled up into daily totals. |
+
 ### preferences
 
 What the app's own export saves so a restore doesn't reset your
@@ -307,10 +321,9 @@ families achieves nothing.
 | --- | --- |
 | `enabled` | Whether the integration is on. |
 | `secrets` | Base64 of the sealed box holding the server URL and token. |
-| `trackSleep` | Whether the sensor's history is rolled up into daily totals. |
-| `sleepStateEntity`, `cameraSleepEntity` | The two sleep sources. |
-| `heartRateEntity`, `oxygenEntity`, `skinTempEntity` | Vitals. |
-| `chargingEntity`, `batteryEntity` | The sock's own state. |
+
+The entity ids belong to a child rather than a family, so they are
+written under that child's `sensors` instead.
 
 ## Converting another app's export
 
