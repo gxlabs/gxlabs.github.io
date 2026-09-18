@@ -33,7 +33,7 @@ zoey-baby-zoey-20260916-113000.zip
     └── images/
         ├── child/1.jpg
         ├── feedings/1.jpg
-        ├── changes/12.jpg
+        ├── diapers/12.jpg
         ├── pumping/3.jpg
         ├── growth/2.jpg
         ├── temperature/1.jpg
@@ -83,7 +83,7 @@ A whole archive, one row per section:
       "rightSeconds": 540
     }
   ],
-  "changes": [
+  "diapers": [
     { "id": 1, "time": "2026-09-16T08:12:00-04:00", "wet": true, "solid": true, "color": "mustard" }
   ],
   "sleep": [
@@ -107,17 +107,40 @@ A whole archive, one row per section:
 }
 ```
 
-Four sections must be present, even if empty: `feedings`, `changes`,
+Four keys must be present, even if empty: `feedings`, `diapers`,
 `sleep` and `pumping`. Everything else can be left out. Keys the app
 doesn't know are ignored, so extra fields of your own are harmless.
 
-## The sections
+## Keys
+
+The whole of `data.json`, top level first:
+
+| Key | Required | Holds |
+| --- | --- | --- |
+| `feedings` | yes | Bottles and breast feeds, and solids. |
+| `diapers` | yes | Diaper changes. |
+| `sleep` | yes | One row per day of awake / asleep / deep totals. |
+| `pumping` | yes | Pumping sessions. |
+| `naps` | no | Individual sleeps, which the timeline draws a row each. |
+| `growth` | no | Weights, heights and head circumferences. |
+| `temperature` | no | Temperature readings. |
+| `medication` | no | Doses given. |
+| `child` | no | Name, birth date, sex and profile photo. |
+| `preferences` | no | Units and which buttons are on. |
+| `homeAssistant` | no | Sensor settings. |
+| `exportedAt` | no | When the archive was written. |
+| `childName` | no | Who the archive is of. |
+
+The last four are the app's own bookkeeping. `preferences` and
+`homeAssistant` restore settings rather than records, and `exportedAt`
+and `childName` are only stamped on the way out: the import reads
+neither. A converted archive can leave all four out.
 
 Times are ISO 8601 with an offset (`2026-09-16T08:37:31-04:00`).
 Volumes are millilitres, weight is kilograms, lengths are centimetres,
 temperature is Celsius. The app converts to whatever units the phone is
-set to. `id` is an integer unique within its own section, and its
-only job is to attach a photo; numbering each section from 1 is fine.
+set to. `id` is an integer unique within its own key, and its only job
+is to attach a photo; numbering each one from 1 is fine.
 
 ### feedings
 
@@ -131,7 +154,7 @@ only job is to attach a photo; numbering each section from 1 is fine.
 | `leftSeconds`, `rightSeconds` | no | Time on each side of a breast feed. |
 | `notes` | no | |
 
-### changes
+### diapers
 
 | Field | Required | Notes |
 | --- | --- | --- |
@@ -215,20 +238,43 @@ is optional.
 | `birthDate` | |
 | `photoPath` | Path inside the ZIP, `images/child/1.jpg` by convention. |
 
-### preferences and homeAssistant
+### preferences
 
-The app's own export carries two more sections: `preferences` (units
-and which buttons are on) and `homeAssistant` (sensor settings, with
-the server URL and token sealed so only your own devices can open
-them). They exist so restoring a backup doesn't reset your settings.
-Leave both out of a converted archive.
+What the app's own export saves so a restore doesn't reset your
+settings. Leave the whole key out of a converted archive. Every field
+is optional, and a value the app doesn't recognise is dropped rather
+than failing the import.
+
+| Field | Notes |
+| --- | --- |
+| `liquidUnits`, `growthUnits` | `metric` or `imperial`. |
+| `enabledTiles` | Home's buttons, in order: `bottle`, `breast`, `diaper`, `pump`, `sleep`, `measurement`, `temperature`, `medication`. |
+| `enabledSummaryPills` | The day strip: `totalMilk`, `breast`, `diaper`, `pump`, `sleep`. |
+| `enabledLiveActivityKinds` | Which timers raise a Live Activity: `breast`, `pump`. |
+| `enabledNotificationKinds` | Which of a partner's logs notify, named as `enabledTiles` is. |
+
+### homeAssistant
+
+The sensor settings, for the same reason. Leave it out too: the server
+URL and the token are sealed into `secrets`, a box only the devices
+signed into that iCloud account can open, so copying it between
+families achieves nothing.
+
+| Field | Notes |
+| --- | --- |
+| `enabled` | Whether the integration is on. |
+| `secrets` | Base64 of the sealed box holding the server URL and token. |
+| `trackSleep` | Whether the sensor's history is rolled up into daily totals. |
+| `sleepStateEntity`, `cameraSleepEntity` | The two sleep sources. |
+| `heartRateEntity`, `oxygenEntity`, `skinTempEntity` | Vitals. |
+| `chargingEntity`, `batteryEntity` | The sock's own state. |
 
 ## Converting another app's export
 
 1. **Export from the other app.** Most give a CSV, one file or one per
    kind of event.
 2. **Map its columns onto the sections above.** A feed usually becomes
-   a `feedings` row; a diaper change a `changes` row with `wet` and
+   a `feedings` row; a diaper change a `diapers` row with `wet` and
    `solid` flags; a pumping session a `pumping` row. Convert its
    volumes to millilitres, its weights to kilograms and its
    temperatures to Celsius as you go.
