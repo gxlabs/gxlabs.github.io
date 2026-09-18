@@ -156,6 +156,10 @@ is to attach a photo; numbering each one from 1 is fine.
 
 ### diapers
 
+An archive written before this key was named `diapers` called it
+`changes`, with its photos under `images/changes`. Both are still
+read, so an older export still imports. Write the new names.
+
 | Field | Required | Notes |
 | --- | --- | --- |
 | `id` | yes | Photo key. |
