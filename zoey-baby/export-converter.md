@@ -291,7 +291,7 @@ own export; a converted archive can leave it out.
 | Field | Notes |
 | --- | --- |
 | `sleepStateEntity`, `cameraSleepEntity` | The two sleep sources. |
-| `heartRateEntity`, `oxygenEntity`, `skinTempEntity` | Vitals. |
+| `heartRateEntity`, `oxygenEntity` | Vitals. |
 | `chargingEntity`, `batteryEntity` | The sock's own state. |
 | `trackSleep` | Whether this child's sensor history is rolled up into daily totals. |
 

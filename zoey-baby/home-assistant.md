@@ -15,11 +15,11 @@ parent_url: /zoey-baby
 </style>
 
 Zoey Baby can read live sensor values out of your own Home Assistant
-instance. A smart sock gives heart rate, oxygen, skin temperature and
-sleep state; a baby monitor camera gives asleep or awake. Readings show
-on the Home screen, and with sleep tracking on, the sensor's history is
-rolled up into daily awake, asleep and deep totals, with naps drawn on
-the timeline that nobody had to log.
+instance. A smart sock gives heart rate, oxygen and sleep state; a baby
+monitor camera gives asleep or awake. Readings show on the Home screen,
+and with sleep tracking on, the sensor's history is rolled up into daily
+awake, asleep and deep totals, with naps drawn on the timeline that
+nobody had to log.
 
 Your phone talks to your Home Assistant directly. Nothing routes
 through a gxlabs server, and the credentials stay on your devices.
@@ -101,7 +101,6 @@ secrets.
 | Camera sleep | [`binary_sensor`][binary] | [on or off][binary] |
 | Charging | [`binary_sensor`][binary] | [on or off][binary], so time on the base doesn't read as the sensor dropping out |
 | Battery % | [`sensor`][sensor] | a number, 0 to 100 |
-| Skin temp | [`sensor`][sensor] | a number, in °F or °C |
 
 [sensor]: https://www.home-assistant.io/integrations/sensor/
 [binary]: https://www.home-assistant.io/integrations/binary_sensor/
