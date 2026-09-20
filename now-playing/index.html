@@ -5,7 +5,7 @@ head_include: now-playing-head.html
 ---
 <main>
   <h1>Now Playing Display</h1>
-  <p class="tagline">A macOS menu bar app that streams what you're playing (album art, track info, progress) to a USB-connected ESP32-C6 round display.</p>
+  <p class="tagline">A macOS menu bar app that streams what you're playing (album art, track info, progress) to a USB-connected ESP32 round display.</p>
 
   <img class="hero" src="screenshot.jpg" alt="The device showing &quot;Money&quot; by Pink Floyd">
 
@@ -14,36 +14,48 @@ head_include: now-playing-head.html
   <span class="pill">USB-C</span>
 
   <h2>Hardware</h2>
+  <p>Either board works — the app detects which one is attached and sizes the artwork to match.</p>
   <ul>
-    <li><a href="https://www.seeedstudio.com/Seeed-Studio-XIAO-ESP32C6-p-5884.html">Seeed XIAO ESP32-C6</a></li>
-    <li><a href="https://www.seeedstudio.com/Seeed-Studio-Round-Display-for-XIAO-p-5638.html">Seeed Round Display for XIAO</a> (240×240 GC9A01A + CHSC6X touch)</li>
+    <li><strong><a href="https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-1.46">Waveshare ESP32-S3-Touch-LCD-1.46</a></strong> — all-in-one, 412×412 round IPS with touch. Nothing to assemble.</li>
+    <li><strong><a href="https://www.seeedstudio.com/Seeed-Studio-XIAO-ESP32C6-p-5884.html">Seeed XIAO ESP32-C6</a></strong> plus the <a href="https://www.seeedstudio.com/Seeed-Studio-Round-Display-for-XIAO-p-5638.html">Round Display for XIAO</a> — 240×240, two parts.</li>
     <li>USB-C data cable (charge-only cables won't work)</li>
   </ul>
 
-  <h2>3D-printed case</h2>
-  <p>STLs are published on <a href="https://www.thingiverse.com/thing:6938412">Thingiverse</a>. The case snaps around the round-display board and exposes the USB-C port.</p>
+  <h2>3D-printed cases</h2>
+  <ul>
+    <li><strong>Waveshare ESP32-S3-Touch-LCD-1.46</strong> — STLs on <a href="https://www.printables.com/model/1848211-waveshare-esp32-s3-145-round-display-dev-board-wit">Printables</a>.</li>
+    <li><strong>Seeed Round Display for XIAO</strong> — STLs on <a href="https://www.thingiverse.com/thing:6938412">Thingiverse</a>. Snaps around the round-display board and exposes the USB-C port.</li>
+  </ul>
 
   <h2>Setup</h2>
 
   <h3>1. Flash the firmware</h3>
-  <a class="download" href="https://github.com/gxlabs/now-playing-device/releases/download/v1.1/firmware.bin">Download firmware.bin</a>
-  <p>Pre-built firmware is a single merged image (flash to offset <code>0x0</code>).</p>
-  <p>Easiest method: open the <a href="https://espressif.github.io/esptool-js/">ESP web tool</a> in Chrome (uses WebSerial), connect to the device, and flash <code>firmware.bin</code> at offset <code>0x0</code>.</p>
+  <p>Pick the image for your board. Each is a single merged image, flashed to offset <code>0x0</code>.</p>
+  <a class="download" href="https://github.com/gxlabs/now-playing-device/releases/download/v1.2/firmware-esp32s3.bin">Download firmware-esp32s3.bin</a>
+  <p>…for the Waveshare ESP32-S3-Touch-LCD-1.46.</p>
+  <a class="download" href="https://github.com/gxlabs/now-playing-device/releases/download/v1.2/firmware-esp32c6.bin">Download firmware-esp32c6.bin</a>
+  <p>…for the Seeed XIAO ESP32-C6 with the Round Display.</p>
+  <div class="callout"><strong>Use the right one.</strong> The images are board-specific — the S3 build assumes 16MB flash and octal PSRAM, the C6 build 4MB and none — so the wrong image will not boot.</div>
+  <p>Easiest method: open the <a href="https://espressif.github.io/esptool-js/">ESP web tool</a> in Chrome (uses WebSerial), connect to the device, and flash your image at offset <code>0x0</code>.</p>
   <p>Or via the CLI. Install <code>esptool</code>:</p>
   <pre><code>pip install esptool   # or: brew install esptool</code></pre>
-  <p>Plug in the XIAO ESP32-C6 over USB-C, then flash:</p>
-  <pre><code>esptool.py --chip esp32c6 --port /dev/cu.usbmodem* write_flash 0x0 firmware.bin</code></pre>
-  <div class="callout"><strong>Note:</strong> on Linux/Windows the port path is different (<code>/dev/ttyUSB0</code>, <code>COM3</code>, etc). If <code>esptool</code> can't enter download mode automatically, hold the <code>BOOT</code> button on the XIAO while plugging in (or pressing <code>RESET</code>).</div>
-  <p>Or build from source via ESP-IDF (<code>idf.py build flash</code>) using the <code>firmware/</code> tree in the repo.</p>
+  <p>Plug the board in over USB-C, then flash:</p>
+  <pre><code># Waveshare ESP32-S3-Touch-LCD-1.46
+esptool.py --chip esp32s3 --port /dev/cu.usbmodem* write_flash 0x0 firmware-esp32s3.bin
+
+# Seeed XIAO ESP32-C6 + Round Display
+esptool.py --chip esp32c6 --port /dev/cu.usbmodem* write_flash 0x0 firmware-esp32c6.bin</code></pre>
+  <div class="callout"><strong>Note:</strong> on Linux/Windows the port path is different (<code>/dev/ttyUSB0</code>, <code>COM3</code>, etc). If <code>esptool</code> can't enter download mode automatically, hold the <code>BOOT</code> button while plugging in (or while pressing <code>RESET</code>).</div>
+  <p>Or build from source via ESP-IDF (<code>idf.py set-target esp32s3</code> or <code>esp32c6</code>, then <code>idf.py build flash</code>) using the <code>firmware/</code> tree in the repo.</p>
 
   <h3>2. Install the Mac app</h3>
-  <a class="download" href="https://github.com/gxlabs/now-playing-device/releases/download/v1.1/NowPlayingDisplay.dmg">Download NowPlayingDisplay.dmg</a>
+  <a class="download" href="https://github.com/gxlabs/now-playing-device/releases/download/v1.2/NowPlayingDisplay.dmg">Download NowPlayingDisplay.dmg</a>
   <p>Open the disk image, drag <strong>NowPlayingDisplay.app</strong> to <code>/Applications</code>, and launch it. It auto-detects the ESP32 over USB and reconnects on replug, no configuration.</p>
   <p>To have it start automatically when you log in, click the menu bar icon and toggle <strong>Launch at login</strong>. macOS will list it under System Settings → General → Login Items, where it can be disabled at any time.</p>
 
   <h2>How it works</h2>
   <div class="diagram">┌───────────┐  USB serial    ┌────────────────┐  /usr/bin/python3  ┌──────────────────┐
-│ ESP32-C6  │ ◄────────────  │  Menu bar app  │ ◄────────────────  │ Apple Music      │
+│   ESP32   │ ◄────────────  │  Menu bar app  │ ◄────────────────  │ Apple Music      │
 │ + display │ ─────────────► │   (Mac side)   │ ─────────────────► │  / Spotify, etc  │
 └───────────┘  touch cmds    └────────────────┘   media controls   └──────────────────┘</div>
   <p>The Mac reads now-playing metadata via the bundled <a href="https://github.com/ungive/mediaremote-adapter"><code>MediaRemoteAdapter.framework</code></a>, loaded in-process by <code>/usr/bin/python3</code> (a <code>com.apple.*</code>-signed binary, since macOS 15.4+ only authorizes the private MediaRemote framework for callers with an Apple bundle id, so the bundled py2app Python can't reach it directly). Artwork is converted to RGB565 and pushed to the ESP32 over USB; touches on the round display send prev/play-pause/next back to the Mac.</p>
