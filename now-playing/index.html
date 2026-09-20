@@ -7,24 +7,24 @@ head_include: now-playing-head.html
   <h1>Now Playing Display</h1>
   <p class="tagline">A macOS menu bar app that streams what you're playing (album art, track info, progress) to a USB-connected ESP32 round display.</p>
 
-  <img class="hero" src="screenshot.jpg" alt="The device showing &quot;Money&quot; by Pink Floyd">
+  <img class="hero" src="screenshot.jpg" alt="The device showing &quot;Walking On The Moon&quot; by The Police">
 
   <span class="pill">macOS 13+</span>
   <span class="pill">Apple Silicon &amp; Intel</span>
   <span class="pill">USB-C</span>
 
   <h2>Hardware</h2>
-  <p>Either board works — the app detects which one is attached and sizes the artwork to match.</p>
+  <p>Either board works. The app detects which one is attached and sizes the artwork to match.</p>
   <ul>
-    <li><strong><a href="https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-1.46">Waveshare ESP32-S3-Touch-LCD-1.46</a></strong> — all-in-one, 412×412 round IPS with touch. Nothing to assemble.</li>
-    <li><strong><a href="https://www.seeedstudio.com/Seeed-Studio-XIAO-ESP32C6-p-5884.html">Seeed XIAO ESP32-C6</a></strong> plus the <a href="https://www.seeedstudio.com/Seeed-Studio-Round-Display-for-XIAO-p-5638.html">Round Display for XIAO</a> — 240×240, two parts.</li>
+    <li><strong><a href="https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-1.46">Waveshare ESP32-S3-Touch-LCD-1.46</a></strong>: all-in-one, 412×412 round IPS with touch. Nothing to assemble.</li>
+    <li><strong><a href="https://www.seeedstudio.com/Seeed-Studio-XIAO-ESP32C6-p-5884.html">Seeed XIAO ESP32-C6</a></strong> plus the <a href="https://www.seeedstudio.com/Seeed-Studio-Round-Display-for-XIAO-p-5638.html">Round Display for XIAO</a>: 240×240, two parts.</li>
     <li>USB-C data cable (charge-only cables won't work)</li>
   </ul>
 
   <h2>3D-printed cases</h2>
   <ul>
-    <li><strong>Waveshare ESP32-S3-Touch-LCD-1.46</strong> — STLs on <a href="https://www.printables.com/model/1848211-waveshare-esp32-s3-145-round-display-dev-board-wit">Printables</a>.</li>
-    <li><strong>Seeed Round Display for XIAO</strong> — STLs on <a href="https://www.thingiverse.com/thing:6938412">Thingiverse</a>. Snaps around the round-display board and exposes the USB-C port.</li>
+    <li><strong>Waveshare ESP32-S3-Touch-LCD-1.46</strong>: STLs on <a href="https://www.printables.com/model/1848211-waveshare-esp32-s3-145-round-display-dev-board-wit">Printables</a>.</li>
+    <li><strong>Seeed Round Display for XIAO</strong>: STLs on <a href="https://www.thingiverse.com/thing:6938412">Thingiverse</a>. Snaps around the round-display board and exposes the USB-C port.</li>
   </ul>
 
   <h2>Setup</h2>
@@ -35,7 +35,7 @@ head_include: now-playing-head.html
   <p>…for the Waveshare ESP32-S3-Touch-LCD-1.46.</p>
   <a class="download" href="https://github.com/gxlabs/now-playing-device/releases/download/v1.2/firmware-esp32c6.bin">Download firmware-esp32c6.bin</a>
   <p>…for the Seeed XIAO ESP32-C6 with the Round Display.</p>
-  <div class="callout"><strong>Use the right one.</strong> The images are board-specific — the S3 build assumes 16MB flash and octal PSRAM, the C6 build 4MB and none — so the wrong image will not boot.</div>
+  <div class="callout"><strong>Use the right one.</strong> The images are board-specific. The S3 build assumes 16MB flash and octal PSRAM, the C6 build 4MB and none, so the wrong image will not boot.</div>
   <p>Easiest method: open the <a href="https://espressif.github.io/esptool-js/">ESP web tool</a> in Chrome (uses WebSerial), connect to the device, and flash your image at offset <code>0x0</code>.</p>
   <p>Or via the CLI. Install <code>esptool</code>:</p>
   <pre><code>pip install esptool   # or: brew install esptool</code></pre>
