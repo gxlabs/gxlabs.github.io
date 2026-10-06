@@ -284,13 +284,13 @@ child after.
 
 ### sensors
 
-Which sock and camera are this child's. The connection they are read
+Which sock is this child's. The connection they are read
 through is the family's, under `homeAssistant`. Written by the app's
 own export; a converted archive can leave it out.
 
 | Field | Notes |
 | --- | --- |
-| `sleepStateEntity`, `cameraSleepEntity` | The two sleep sources. |
+| `sleepStateEntity` | The sleep source. |
 | `heartRateEntity`, `oxygenEntity` | Vitals. |
 | `chargingEntity`, `batteryEntity` | The sock's own state. |
 | `trackSleep` | Whether this child's sensor history is rolled up into daily totals. |

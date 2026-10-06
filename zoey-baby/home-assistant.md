@@ -15,11 +15,10 @@ parent_url: /zoey-baby
 </style>
 
 Zoey Baby can read live sensor values out of your own Home Assistant
-instance. A smart sock gives heart rate, oxygen and sleep state; a baby
-monitor camera gives asleep or awake. Readings show on the Home screen,
-and with sleep tracking on, the sensor's history is rolled up into daily
-awake, asleep and deep totals, with naps drawn on the timeline that
-nobody had to log.
+instance. A smart sock gives heart rate, oxygen and sleep state.
+Readings show on the Home screen, and with sleep tracking on, the
+sensor's history is rolled up into daily awake, asleep and deep totals,
+with naps drawn on the timeline that nobody had to log.
 
 Your phone talks to your Home Assistant directly. Nothing routes
 through a gxlabs server, and the credentials stay on your devices.
@@ -33,13 +32,10 @@ If you don't run one yet, start with the
 Zoey Baby needs no add-on and no custom component of its own, just an
 instance you can sign in to.
 
-### 2. Your baby monitor camera and/or smart sock, set up in Home Assistant
-
-Either one on its own is enough, and the app uses both together if you
-have both.
+### 2. Your smart sock, set up in Home Assistant
 
 Zoey Baby reads entities, it doesn't talk to the devices. Getting your
-camera or sock into Home Assistant is a Home Assistant job: an official
+sock into Home Assistant is a Home Assistant job: an official
 [integration](https://www.home-assistant.io/integrations/), a community
 integration, or an add-on, whichever one covers your hardware. Once the
 device's entities report a value in Home Assistant, Zoey Baby can read
@@ -98,7 +94,6 @@ secrets.
 | Heart rate | [`sensor`][sensor] | a number, in bpm |
 | Oxygen | [`sensor`][sensor] | a number, in % |
 | Sleep state | [`sensor`][sensor] | text: `awake`, `light_sleep`, `deep_sleep` |
-| Camera sleep | [`binary_sensor`][binary] | [on or off][binary] |
 | Charging | [`binary_sensor`][binary] | [on or off][binary], so time on the base doesn't read as the sensor dropping out |
 | Battery % | [`sensor`][sensor] | a number, 0 to 100 |
 
@@ -119,7 +114,6 @@ keeps it up to date:
 
 * Each day gets awake, asleep and deep totals.
 * Each stretch of sleep becomes a nap on the Home timeline.
-* Where the sock is off the baby, the camera covers the gap.
 * A nap you log or end by hand stays exactly as you left it. The
   sensor pass won't move it or stretch it back out.
 * Logging a bottle, a breast feed or a diaper ends the nap that's
@@ -149,7 +143,7 @@ Create a fresh token and paste it in.
 
 **"Home Assistant is reachable and the token works, but it returned no
 sensors."** The connection is fine and the device isn't in Home
-Assistant. Check the integration for your camera or sock is set up and
+Assistant. Check the integration for your sock is set up and
 that its entities aren't disabled.
 
 **It works at home and not out.** Open the same URL in Safari on your
