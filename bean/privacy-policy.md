@@ -5,66 +5,63 @@ title: "Bean: coffee reviews - privacy policy"
 
 **Privacy Policy**
 
-Glen Robertson built the Bean: coffee reviews app as a Free app. This SERVICE is provided by Glen Robertson at no cost and is intended for use as is.
+gxlabs LLC built the Bean: coffee reviews app ("Bean") as a free app. This SERVICE is provided by gxlabs LLC and is intended for use as is.
 
-This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.
+This page explains what information Bean collects, how it is used, and the choices you have. If you use Bean, you agree to the collection and use of information as described in this policy. We will not use or share your information with anyone except as described here.
 
-If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.
+**Information we collect**
 
-The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at Bean: coffee reviews unless otherwise defined in this Privacy Policy.
+When you sign in with Apple, we receive:
 
-**Information Collection and Use**
+*   A unique account identifier from Apple.
+*   Your name, if you choose to share it.
+*   Your email address, if you choose to share it. If you use Apple's "Hide My Email", we receive a private relay address instead.
 
-For a better experience, while using our Service, I may require you to provide us with certain personally identifiable information, including but not limited to Name, Email, Profile Photo. The information that I request will be retained on your device and is not collected by me in any way.
+When you use Bean, we store the content you create:
 
-The app does use third party services that may collect information used to identify you.
+*   Your profile: display name, bio, and profile photo.
+*   Reviews: the bean, rating, brew method, tasting notes, comments, photo, who can see it, and (if you add one) the name, address, and map location of where you bought the coffee.
+*   Beans, roasters, and tastes you add.
+*   Likes, comments, who you follow, and reports you submit.
 
-Link to privacy policy of third party service providers used by the app
+Photos you upload are resized and re-encoded on our server, which removes embedded metadata such as the photo's GPS location.
 
-*   [Google Analytics for Firebase](https://firebase.google.com/policies/analytics)
-*   [Firebase Crashlytics](https://firebase.google.com/support/privacy/)
+**How we use your information**
 
-**Log Data**
+Your information is used only to run Bean: to sign you in, show your reviews and profile to the people you choose, show you reviews from others, and calculate ratings for beans and roasters. Average ratings only include reviews shared with everyone.
 
-I want to inform you that whenever you use my Service, in a case of an error in the app I collect data and information (through third party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing my Service, the time and date of your use of the Service, and other statistics.
+We do not sell your information, show ads, or use your information for tracking. Bean contains no analytics, advertising, or crash-reporting SDKs.
 
-**Cookies**
+**Who can see your content**
 
-Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory.
+Your name, profile photo, bio, and statistics (such as number of reviews and followers) are visible to other Bean users. Each review is visible to everyone, only to people who follow you, or only to you, depending on the setting you choose for that review. Comments and likes are visible to anyone who can see the review.
 
-This Service does not use these “cookies” explicitly. However, the app may use third party code and libraries that use “cookies” to collect information and improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.
+**Where your information is stored**
 
-**Service Providers**
+Bean's data is stored on servers operated by gxlabs LLC in the United States, and is transmitted over encrypted HTTPS connections. Your sign-in session is kept in your device's Keychain.
 
-I may employ third-party companies and individuals due to the following reasons:
+**Third parties**
 
-*   To facilitate our Service;
-*   To provide the Service on our behalf;
-*   To perform Service-related services; or
-*   To assist us in analyzing how our Service is used.
+Sign in with Apple is provided by Apple and is subject to [Apple's Privacy Policy](https://www.apple.com/legal/privacy/). The app uses Apple Maps to search for and display purchase locations. We do not share your information with any other third party, except where required by law.
 
-I want to inform users of this Service that these third parties have access to your Personal Information. The reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.
+**Data retention and deletion**
+
+We keep your information for as long as you have an account. You can delete your account at any time in the app under Profile → Settings → Delete account. This permanently deletes your profile, reviews, comments, likes, and follows. Beans and roasters you added stay in the shared catalogue, without any link to you. Deleted data may remain in server backups for up to seven months before those backups are overwritten. You can also email us to request deletion.
 
 **Security**
 
-I value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
+We use reasonable measures to protect your information, including encrypted connections, hashed session tokens, and rate limiting. However, no method of transmission over the internet or electronic storage is 100% secure, and we cannot guarantee absolute security.
 
-**Links to Other Sites**
+**Children's Privacy**
 
-This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by me. Therefore, I strongly advise you to review the Privacy Policy of these websites. I have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.
-
-**Children’s Privacy**
-
-These Services do not address anyone under the age of 13. I do not knowingly collect personally identifiable information from children under 13\. In the case I discover that a child under 13 has provided me with personal information, I immediately delete this from our servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact me so that I will be able to do necessary actions.
+Bean is not directed at anyone under the age of 13. We do not knowingly collect personal information from children under 13. If we learn that a child under 13 has provided personal information, we will delete it. If you are a parent or guardian and believe your child has provided us with personal information, please contact us.
 
 **Changes to This Privacy Policy**
 
-I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.
+We may update this Privacy Policy from time to time. Changes will be posted on this page, so please review it periodically.
 
-This policy is effective as of 2020-06-16
+This policy is effective as of 2026-10-09
 
 **Contact Us**
 
-If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at appleid@glenrobertson.co.nz.
-
-This privacy policy page was created at [privacypolicytemplate.net](https://privacypolicytemplate.net) and modified/generated by [App Privacy Policy Generator](https://app-privacy-policy-generator.firebaseapp.com/)
+If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at enquiries@gxlabs.co.
