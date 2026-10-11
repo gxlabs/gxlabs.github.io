@@ -41,7 +41,7 @@ title: "Bean: coffee reviews"
 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 shot-grid">
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/bean/screenshots/01-recipe.png" loading="lazy" alt="Dialing in: grind, dose and yield with the machine and grinder that made the shot">
+            <img src="/bean/screenshots/01-recipe.png" loading="lazy" alt="Dialing in: grind, dose and yield, with the machine and grinder that made the shot">
         </figure>
     </div>
     <div class="col mb-4">
@@ -51,7 +51,7 @@ title: "Bean: coffee reviews"
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/bean/screenshots/03-beans.png" loading="lazy" alt="Finding beans by roast, process, rating or what's sold nearby">
+            <img src="/bean/screenshots/03-beans.png" loading="lazy" alt="Finding beans by roast, process, rating and more">
         </figure>
     </div>
     <div class="col mb-4">
