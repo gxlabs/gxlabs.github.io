@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "HiFi Remote - privacy policy"
+breadcrumb: "Privacy policy"
+parent: "HiFi Remote"
+parent_url: /hifi-remote
 ---
 
 **Privacy Policy**

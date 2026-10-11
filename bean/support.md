@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Bean: coffee reviews - support"
+breadcrumb: "Support"
+parent: "Bean"
+parent_url: /bean
 ---
 
 Please contact: bean-coffee-reviews-support@gxlabs.co

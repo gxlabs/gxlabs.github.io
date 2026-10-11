@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Bean: coffee reviews - privacy policy"
+breadcrumb: "Privacy policy"
+parent: "Bean"
+parent_url: /bean
 ---
 
 **Privacy Policy**

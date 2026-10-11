@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "HiFi Remote - terms and conditions"
+breadcrumb: "Terms & conditions"
+parent: "HiFi Remote"
+parent_url: /hifi-remote
 ---
 
 **Terms & Conditions**

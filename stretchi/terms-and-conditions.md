@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Stretchi - terms and conditions"
+breadcrumb: "Terms & conditions"
+parent: "Stretchi"
+parent_url: /stretchi
 ---
 
 **Terms & Conditions**

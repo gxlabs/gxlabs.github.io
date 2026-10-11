@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Stretchi - privacy policy"
+breadcrumb: "Privacy policy"
+parent: "Stretchi"
+parent_url: /stretchi
 ---
 
 **Privacy Policy**

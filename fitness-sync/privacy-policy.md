@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Fitness Sync - privacy policy"
+breadcrumb: "Privacy policy"
+parent: "Fitness Sync"
+parent_url: /fitness-sync
 ---
 
 **Privacy Policy**

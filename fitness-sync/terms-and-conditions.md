@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Fitness Sync - terms and conditions"
+breadcrumb: "Terms & conditions"
+parent: "Fitness Sync"
+parent_url: /fitness-sync
 ---
 
 **Terms & Conditions**

@@ -1,6 +1,9 @@
 ---
 layout: page
 title: "Bean: coffee reviews - terms and conditions"
+breadcrumb: "Terms & conditions"
+parent: "Bean"
+parent_url: /bean
 ---
 
 **Terms & Conditions**
