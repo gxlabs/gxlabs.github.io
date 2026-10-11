@@ -16,9 +16,8 @@ parent_url: /zoey-baby
 
 Zoey Baby can read live sensor values out of your own Home Assistant
 instance. A smart sock gives heart rate, oxygen and sleep state.
-Readings show on the Home screen, and with sleep tracking on, the
-sensor's history is rolled up into daily awake, asleep and deep totals,
-with naps drawn on the timeline that nobody had to log.
+Readings show on the Home screen, and with sleep tracking on, naps
+land on the timeline that nobody had to log.
 
 Your phone talks to your Home Assistant directly. Nothing routes
 through a gxlabs server, and the credentials stay on your devices.
@@ -112,8 +111,10 @@ Pick a sleep sensor and an **Automatic nap creation** section appears
 under Sensors. Switch it on and the app pulls the sensor's history and
 keeps it up to date:
 
-* Each day gets awake, asleep and deep totals.
-* Each stretch of sleep becomes a nap on the Home timeline.
+* Each stretch of sleep becomes a nap on the Home timeline, with its
+  light and deep time.
+* The naps count toward the day's sleep total, and night sleep toward
+  the night's. Set the wake time and bedtime on the child's profile.
 * A nap you log or end by hand stays exactly as you left it. The
   sensor pass won't move it or stretch it back out.
 * Logging a bottle, a breast feed or a diaper ends the nap that's

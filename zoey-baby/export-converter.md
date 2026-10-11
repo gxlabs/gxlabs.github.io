@@ -69,7 +69,9 @@ A whole archive: a family of two, with a row or two under each key.
         "lastName": "Robertson",
         "sex": "girls",
         "birthDate": "2026-03-02T08:14:00-05:00",
-        "photoPath": "images/1/child/1.jpg"
+        "photoPath": "images/1/child/1.jpg",
+        "wakeMinutes": 420,
+        "bedtimeMinutes": 1140
       },
       "childName": "Zoey",
       "feedings": [
@@ -95,9 +97,6 @@ A whole archive: a family of two, with a row or two under each key.
       "diapers": [
         { "id": 1, "time": "2026-09-18T08:12:00-04:00", "wet": true, "solid": true, "color": "mustard" }
       ],
-      "sleep": [
-        { "day": "2026-09-18T00:00:00-04:00", "awakeSeconds": 31500, "asleepSeconds": 19620, "deepSeconds": 5130 }
-      ],
       "naps": [
         { "start": "2026-09-18T08:37:31-04:00", "end": "2026-09-18T10:51:31-04:00", "manual": false }
       ],
@@ -121,7 +120,6 @@ A whole archive: a family of two, with a row or two under each key.
       "diapers": [
         { "id": 1, "time": "2026-09-18T09:20:00-04:00", "wet": true, "solid": false }
       ],
-      "sleep": [],
       "pumping": []
     }
   ]
@@ -150,9 +148,8 @@ Inside one entry of `children`:
 | --- | --- | --- |
 | `feedings` | yes | Bottles and breast feeds, and solids. |
 | `diapers` | yes | Diaper changes. |
-| `sleep` | yes | One row per day of awake / asleep / deep totals. |
 | `pumping` | yes | Pumping sessions. |
-| `naps` | no | Individual sleeps, which the timeline draws a row each. |
+| `naps` | no | Individual sleeps. The timeline draws a row each, and the day and night totals are added up from them. |
 | `growth` | no | Weights, heights and head circumferences. |
 | `temperature` | no | Temperature readings. |
 | `medication` | no | Doses given. |
@@ -207,20 +204,11 @@ is to attach a photo; numbering each one from 1 is fine.
 | `color` | no | `black`, `brown`, `green`, `yellow`, `mustard` |
 | `notes` | no | |
 
-### sleep
-
-One row per day, holding that day's totals. All four fields are
-required, and `day` is local midnight.
-
-| Field | Notes |
-| --- | --- |
-| `day` | Local midnight of the day the totals cover. |
-| `awakeSeconds`, `asleepSeconds`, `deepSeconds` | Deep is counted inside asleep, not beside it. |
-
 ### naps
 
-Individual sleeps, which are what the timeline draws a row per. Leave
-the section out if the other app only kept daily totals.
+Individual sleeps, which are what the timeline draws a row per. The
+day and night totals are added up from these, so an app that only kept
+daily totals has nothing to bring across here.
 
 | Field | Required | Notes |
 | --- | --- | --- |
@@ -281,6 +269,7 @@ child after.
 | `sex` | `girls` or `boys`, which picks the WHO growth curve. |
 | `birthDate` | |
 | `photoPath` | Path inside the ZIP, `images/<n>/child/1.jpg` by convention. |
+| `wakeMinutes`, `bedtimeMinutes` | When the child's day starts and ends, in minutes after midnight. Leave them out for 7am and 7pm. |
 
 ### sensors
 
@@ -293,7 +282,7 @@ own export; a converted archive can leave it out.
 | `sleepStateEntity` | The sleep source. |
 | `heartRateEntity`, `oxygenEntity` | Vitals. |
 | `chargingEntity`, `batteryEntity` | The sock's own state. |
-| `trackSleep` | Whether this child's sensor history is rolled up into daily totals. |
+| `trackSleep` | Whether naps are written down from this child's sensor history. |
 
 ### preferences
 

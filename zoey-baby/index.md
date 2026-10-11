@@ -23,7 +23,7 @@ title: "Zoey Baby"
             <li>Live breast feed and pump timers that either parent can start, switch sides on, or stop, from whichever phone is nearest.</li>
             <li>Sync with your partner over iCloud, with a ping when they log something. No accounts, no third-party servers, no ads.</li>
             <li><a href="/zoey-baby/home-assistant">Home Assistant integration</a> for smart sock readings: heart rate, oxygen, and sleep state.</li>
-            <li>Naps written down from the sensor and rolled up into daily awake, asleep, and deep totals. A nap you log or end by hand stays exactly as you left it.</li>
+            <li>Naps written down from the sensor, with a daily total for naps and one for the night, split at the wake time and bedtime you set. A nap you log or end by hand stays exactly as you left it.</li>
             <li>Sleep alerts when the sensor reports your baby falling asleep, going deep, or waking up.</li>
             <li>Nap prediction off the wake windows your baby actually keeps, with an alert before the next likely sleep or wake.</li>
             <li>Photos that blur themselves whenever you are away from home, on the kinds of event you choose.</li>
