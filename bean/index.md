@@ -41,27 +41,22 @@ title: "Bean: coffee reviews"
 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 shot-grid">
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/bean/screenshots/01-feed.png" loading="lazy" alt="The feed: real cups, rated and photographed by people who love coffee">
+            <img src="/bean/screenshots/01-recipe.png" loading="lazy" alt="Dialing in: grind, dose and yield with the machine and grinder that made the shot">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/bean/screenshots/02-bean.png" loading="lazy" alt="A bean page with its rating, tasting notes and reviews">
+            <img src="/bean/screenshots/02-feed.png" loading="lazy" alt="The feed: friends' cups, rated and photographed">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/bean/screenshots/03-friends.png" loading="lazy" alt="A friend's profile: what they're drinking, with likes and comments">
+            <img src="/bean/screenshots/03-beans.png" loading="lazy" alt="Finding beans by roast, process, rating or what's sold nearby">
         </figure>
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/bean/screenshots/04-roasters.png" loading="lazy" alt="A roaster page: its beans, how they rate, and the tastes it's known for">
-        </figure>
-    </div>
-    <div class="col mb-4">
-        <figure class="shot mb-0">
-            <img src="/bean/screenshots/05-log.png" loading="lazy" alt="Logging a cup: rating, brew method and tasting notes">
+            <img src="/bean/screenshots/04-stats.png" loading="lazy" alt="My stats: cups, beans, roasters and brew methods added up">
         </figure>
     </div>
 </div>
