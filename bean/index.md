@@ -46,7 +46,7 @@ title: "Bean: coffee reviews"
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/bean/screenshots/02-feed.png" loading="lazy" alt="The feed: friends' cups, rated and photographed">
+            <img src="/bean/screenshots/02-tastes.png" loading="lazy" alt="Naming the taste on the SCA flavor wheel, a tap on each note">
         </figure>
     </div>
     <div class="col mb-4">
@@ -56,7 +56,12 @@ title: "Bean: coffee reviews"
     </div>
     <div class="col mb-4">
         <figure class="shot mb-0">
-            <img src="/bean/screenshots/04-stats.png" loading="lazy" alt="My stats: cups, beans, roasters and brew methods added up">
+            <img src="/bean/screenshots/04-feed.png" loading="lazy" alt="The feed: friends' cups, rated and photographed">
+        </figure>
+    </div>
+    <div class="col mb-4">
+        <figure class="shot mb-0">
+            <img src="/bean/screenshots/05-stats.png" loading="lazy" alt="My stats: cups, beans, roasters and brew methods added up">
         </figure>
     </div>
 </div>
