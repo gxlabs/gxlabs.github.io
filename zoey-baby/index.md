@@ -22,13 +22,13 @@ title: "Zoey Baby"
         <h3 class="mt-0"><a href="/zoey-baby">Zoey Baby</a></h3>
         <p>Zoey Baby is a private baby tracker on iOS and stores your data in your private iCloud.</p>
         <ul class="text-left">
-            <li>Log feeds, solids, diapers, sleep, pumping, growth and more, each with an optional photo.</li>
-            <li>Live breast feed and pump timers either parent can start, switch or stop.</li>
-            <li>Sync with your partner over iCloud, with a ping, a like or a comment on what they log. No accounts, no ads.</li>
-            <li><a href="/zoey-baby/home-assistant">Home Assistant integration</a> for smart sock vitals, automatic naps, sleep alerts and nap prediction.</li>
-            <li>Widgets, Apple Watch, Siri, and Live Activities on the Lock Screen and Dynamic Island.</li>
-            <li>Trends, WHO growth charts, and reminders for pumping, bath night and vitamin D.</li>
-            <li>Photos that blur when you're away from home, and a full export you can import again or bring over from another app.</li>
+            <li><strong>Logging:</strong> feeds, solids, diapers, sleep, pumping, growth and more, each with an optional photo.</li>
+            <li><strong>Live timers:</strong> breast feed and pump timers either parent can start, switch or stop.</li>
+            <li><strong>Partner syncing:</strong> over iCloud, with a ping, a like or a comment on what they log. No accounts, no ads.</li>
+            <li><strong>Smart sock:</strong> <a href="/zoey-baby/home-assistant">Home Assistant integration</a> for vitals, automatic naps, sleep alerts and nap prediction.</li>
+            <li><strong>Deep Apple integration:</strong> Siri, widgets, Apple Watch, and Live Activities on the Lock Screen and Dynamic Island.</li>
+            <li><strong>Insights:</strong> trends, WHO growth charts, and reminders for pumping, bath night and vitamin D.</li>
+            <li><strong>Privacy:</strong> photos that blur when you're away from home, and a full export you can import again or bring over from another app.</li>
         </ul>
         <p>Download on the <a href="https://apps.apple.com/us/app/id6786016688">iOS App Store</a>.</p>
         <p>Setting up the sensors? See the <a href="/zoey-baby/home-assistant">Home Assistant guide</a>. Coming from another app? See the <a href="/zoey-baby/export-converter">import format guide</a>.</p>
