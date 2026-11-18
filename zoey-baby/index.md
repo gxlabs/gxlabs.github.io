@@ -22,16 +22,13 @@ title: "Zoey Baby"
         <h3 class="mt-0"><a href="/zoey-baby">Zoey Baby</a></h3>
         <p>A fast, private baby tracker. Feedings, solids, diapers, sleep, pumping, and growth, synced between you and your partner over iCloud.</p>
         <ul class="text-left">
-            <li>Log bottles, breast feeds, solids, diapers, pumping, naps, growth, temperature, medicine, baths and milestones, with a photo on anything you log.</li>
-            <li>Solids with a food picker and a face for how each one went: liked it, so-so, disliked it, or allergic.</li>
-            <li>Live breast feed and pump timers that either parent can start, switch sides on, or stop, from whichever phone is nearest.</li>
-            <li>Sync with your partner over iCloud, with a ping when they log something, and like or comment on what they log. No accounts, no third-party servers, no ads.</li>
-            <li><a href="/zoey-baby/home-assistant">Home Assistant integration</a> for smart sock readings: heart rate, oxygen, naps written down for you, and alerts when your baby falls asleep or wakes.</li>
-            <li>Nap prediction off the wake windows your baby actually keeps, with an alert before the next likely sleep or wake.</li>
-            <li>Home Screen widgets, an Apple Watch app, Siri, and Live Activities on the Lock Screen and Dynamic Island.</li>
-            <li>Trends over 7 days, 30 days, or all time, and growth charts against WHO percentile curves.</li>
-            <li>Reminders to pump, for bath night, and for vitamin D drops through the first year.</li>
-            <li>Photos that blur themselves whenever you are away from home, and an export of your whole history you can import again or bring over from another app.</li>
+            <li>Log feeds, solids, diapers, sleep, pumping, growth, temperature, medicine, baths and milestones, each with an optional photo.</li>
+            <li>Live breast feed and pump timers either parent can start, switch or stop.</li>
+            <li>Sync with your partner over iCloud, with a ping, a like or a comment on what they log. No accounts, no ads.</li>
+            <li><a href="/zoey-baby/home-assistant">Home Assistant integration</a> for smart sock vitals, automatic naps, sleep alerts and nap prediction.</li>
+            <li>Widgets, Apple Watch, Siri, and Live Activities on the Lock Screen and Dynamic Island.</li>
+            <li>Trends, WHO growth charts, and reminders for pumping, bath night and vitamin D.</li>
+            <li>Photos that blur when you're away from home, and a full export you can import again or bring over from another app.</li>
         </ul>
         <p>Download on the <a href="https://apps.apple.com/us/app/id6786016688">iOS App Store</a>.</p>
         <p>Setting up the sensors? See the <a href="/zoey-baby/home-assistant">Home Assistant guide</a>. Coming from another app? See the <a href="/zoey-baby/export-converter">import format guide</a>.</p>
