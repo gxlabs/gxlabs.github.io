@@ -22,7 +22,7 @@ title: "Zoey Baby"
         <h3 class="mt-0"><a href="/zoey-baby">Zoey Baby</a></h3>
         <p>Zoey Baby is a private baby tracker on iOS and stores your data in your private iCloud.</p>
         <ul class="text-left">
-            <li>Log feeds, solids, diapers, sleep, pumping, growth, temperature, medicine, baths and milestones, each with an optional photo.</li>
+            <li>Log feeds, solids, diapers, sleep, pumping, growth and more, each with an optional photo.</li>
             <li>Live breast feed and pump timers either parent can start, switch or stop.</li>
             <li>Sync with your partner over iCloud, with a ping, a like or a comment on what they log. No accounts, no ads.</li>
             <li><a href="/zoey-baby/home-assistant">Home Assistant integration</a> for smart sock vitals, automatic naps, sleep alerts and nap prediction.</li>
