@@ -20,7 +20,7 @@ title: "Zoey Baby"
     <img src="/media/zoey-baby-app-256.png" srcset="/media/zoey-baby-app-256.png 1x, /media/zoey-baby-app-512.png 2x" class="app-icon" alt="Zoey Baby app icon">
     <div>
         <h3 class="mt-0"><a href="/zoey-baby">Zoey Baby</a></h3>
-        <p>A fast, private baby tracker. Feedings, solids, diapers, sleep, pumping, and growth, synced between you and your partner over iCloud.</p>
+        <p>Zoey Baby is a private baby tracker on iOS and stores your data in your private iCloud.</p>
         <ul class="text-left">
             <li>Log feeds, solids, diapers, sleep, pumping, growth, temperature, medicine, baths and milestones, each with an optional photo.</li>
             <li>Live breast feed and pump timers either parent can start, switch or stop.</li>
