@@ -38,7 +38,10 @@ zoey-baby-family-20260918-113000.zip
         │   ├── pumping/3.jpg
         │   ├── growth/2.jpg
         │   ├── temperature/1.jpg
-        │   └── medication/4.jpg
+        │   ├── medication/4.jpg
+        │   ├── milestone/1.jpg
+        │   ├── bath/2.jpg
+        │   └── solids/1.jpg
         └── 2/                  the second child, same shape
             └── feedings/1.jpg
 ```
@@ -52,7 +55,9 @@ An archive holds the whole family, so photos are filed per child:
 from 1. `images/` is optional, and so is any folder in it. Inside, a
 photo is named for the `id` of the row it belongs to, in the folder
 named for that row's key, so `images/2/feedings/12.jpg` is the photo on
-the second child's feeding with `"id": 12`.
+the second child's feeding with `"id": 12`. Three folders are named in
+the singular: milestones go in `milestone/`, baths in `bath/`, and
+solids in `solids/`.
 
 ## data.json
 
@@ -82,7 +87,8 @@ A whole archive: a family of two, with a row or two under each key.
           "type": "breast milk",
           "method": "bottle",
           "amount": 120,
-          "notes": "sleepy"
+          "notes": "sleepy",
+          "vitaminD": true
         },
         {
           "id": 2,
@@ -111,6 +117,15 @@ A whole archive: a family of two, with a row or two under each key.
       ],
       "medication": [
         { "id": 1, "time": "2026-09-17T21:20:00-04:00", "name": "Infant Tylenol", "doseAmount": 2.5, "doseUnit": "ml" }
+      ],
+      "solids": [
+        { "id": 1, "time": "2026-09-18T12:15:00-04:00", "foods": ["avocado", "banana", "Mashed lentils"], "reaction": "liked" }
+      ],
+      "milestones": [
+        { "id": 1, "time": "2026-09-12T17:40:00-04:00", "name": "Rolls over", "key": "rolls" }
+      ],
+      "baths": [
+        { "id": 1, "time": "2026-09-17T19:30:00-04:00", "notes": "Hair wash" }
       ]
     },
     {
@@ -146,13 +161,16 @@ Inside one entry of `children`:
 
 | Key | Required | Holds |
 | --- | --- | --- |
-| `feedings` | yes | Bottles and breast feeds, and solids. |
+| `feedings` | yes | Bottles and breast feeds. |
 | `diapers` | yes | Diaper changes. |
 | `pumping` | yes | Pumping sessions. |
 | `naps` | no | Individual sleeps. The timeline draws a row each, and the day and night totals are added up from them. |
 | `growth` | no | Weights, heights and head circumferences. |
 | `temperature` | no | Temperature readings. |
 | `medication` | no | Doses given. |
+| `solids` | no | Each go at solid food: what was tried and how it went. |
+| `milestones` | no | Firsts. |
+| `baths` | no | Baths. |
 | `child` | no | Name, birth date, sex and profile photo. |
 | `childName` | no | The same first name, for the import's own wording. |
 | `sensors` | no | The Home Assistant entities this child's readings come from. |
@@ -191,7 +209,12 @@ is to attach a photo; numbering each one from 1 is fine.
 | `method` | yes | `bottle`, `left breast`, `right breast`, `both breasts`, `parent fed`, `self fed` |
 | `amount` | no | Millilitres. Bottles only. |
 | `leftSeconds`, `rightSeconds` | no | Time on each side of a breast feed. |
+| `vitaminD` | no | True when vitamin D drops were given with the feed, bottle or breast. Defaults to false. |
 | `notes` | no | |
+
+A meal of solid food goes under `solids` rather than here. `solid food`
+is still accepted as a `type`, for an archive that kept solids as
+feeds.
 
 ### diapers
 
@@ -256,6 +279,47 @@ daily totals has nothing to bring across here.
 | `doseUnit` | no | `ml`, `mg`, `drops`, `tablet` |
 | `notes` | no | |
 
+### solids
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `id` | yes | Photo key. |
+| `time` | yes | |
+| `foods` | yes | What was tried, as a list. Each is one of the keys below, or the food in your own words, which the app keeps as written. Can be empty. |
+| `reaction` | no | `liked`, `so_so`, `disliked`, `allergic` |
+| `notes` | no | |
+
+The food keys: `apple`, `avocado`, `baby_cereal`, `banana`, `beans`,
+`bell_pepper`, `berries`, `bread`, `broccoli`, `carrot`, `cheese`,
+`cherry`, `chicken`, `coconut`, `cookie`, `corn`, `cows_milk`,
+`cucumber`, `egg`, `eggplant`, `fish`, `honey`, `ice_cream`, `juice`,
+`kiwi`, `leafy_greens`, `lemon`, `mango`, `meat`, `melon`, `onion`,
+`orange`, `pancakes`, `pasta`, `pastry`, `peach`, `peanuts`, `pear`,
+`peas`, `pineapple`, `pizza`, `potato`, `rice`, `shellfish`, `soup`,
+`strawberry`, `sweet_potato`, `sweets`, `tomato`, `watermelon`.
+
+### milestones
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `id` | yes | Photo key. |
+| `time`, `name` | yes | A row missing either is skipped. |
+| `key` | no | Which of the app's own milestones this is, from the keys below. Leave it out for one you named yourself. |
+| `notes` | no | |
+
+The milestone keys: `smile`, `holds-head`, `laugh`, `grabs`, `rolls`,
+`sleeps-through`, `solids`, `sits`, `babbles`, `tooth`, `crawls`,
+`pulls-up`, `waves`, `claps`, `word`, `steps`, `cup`, `points`, `runs`,
+`two-words`.
+
+### baths
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `id` | yes | Photo key. |
+| `time` | yes | A row without one is skipped. |
+| `notes` | no | |
+
 ### child
 
 Who the entry's records belong to. Every field is optional, but without
@@ -294,8 +358,8 @@ than failing the import.
 | Field | Notes |
 | --- | --- |
 | `liquidUnits`, `growthUnits` | `metric` or `imperial`. |
-| `enabledTiles` | Home's buttons, in order: `bottle`, `breast`, `diaper`, `pump`, `sleep`, `measurement`, `temperature`, `medication`. |
-| `enabledSummaryPills` | The day strip: `totalMilk`, `breast`, `diaper`, `pump`, `sleep`. |
+| `enabledTiles` | Home's buttons, in order: `bottle`, `breast`, `diaper`, `pump`, `sleep`, `measurement`, `temperature`, `medication`, `milestone`, `bath`, `solids`. |
+| `enabledSummaryPills` | The day strip: `totalMilk`, `breast`, `diaper`, `pump`, `sleep`, `bath`. |
 | `enabledLiveActivityKinds` | Which timers raise a Live Activity: `breast`, `pump`. |
 | `enabledNotificationKinds` | Which of a partner's logs notify, named as `enabledTiles` is. |
 
@@ -320,7 +384,8 @@ written under that child's `sensors` instead.
    kind of event.
 2. **Map its columns onto the keys above.** A feed usually becomes a
    `feedings` row; a diaper change a `diapers` row with `wet` and
-   `solid` flags; a pumping session a `pumping` row. Convert its
+   `solid` flags; a pumping session a `pumping` row; a meal of solid
+   food a `solids` row. Convert its
    volumes to millilitres, its weights to kilograms and its
    temperatures to Celsius as you go.
 3. **Write `data.json`** with one entry in `children` per child, each
